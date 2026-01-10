@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3621075517031656"
+     crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Element Avcısı Pro - Kimya Sembol Eşleştirme Oyunu</title>
+    <meta name="description" content="Periyodik tablo elementlerini eğlenerek öğrenin. En yüksek puanı toplayın ve dünya sıralamasına girin!">
+    <meta name="keywords" content="kimya oyunu, elementler, sembol eşleştirme, periyodik tablo, eğitici oyun">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="landing-page">
+        <img src="tablo.png" alt="Periyodik Tablo" class="main-img">
+        
+        <div class="hero-section">
+            <h1>Element Avcısı Pro</h1>
+            <p>Kimya dünyasını oyunla keşfet!</p>
+        </div>
+        
+        <div class="landing-buttons">
+            <a href="game.html" class="btn-start" onclick="localStorage.removeItem('oyuncuAdi')">Oyunu Başlat</a>
+            <a href="#" class="btn-login" id="loginBtn">İsimle Giriş Yap</a>
+        </div>
+
+        <div id="leaderboard-container" class="glass-table">
+            <h3>🏆 Dünya Sıralaması (Top 10)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sıra</th>
+                        <th>Oyuncu</th>
+                        <th style="text-align: right;">Puan</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-body">
+                    <tr>
+                        <td colspan="3" style="text-align:center; padding:20px;">Skorlar Yükleniyor...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+  import { getDatabase, ref, query, orderByChild, limitToLast, onValue } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDl4aJYLl4OHqqX2u0UuC34dUbpcyQdgMY",
+    authDomain: "elementsembol-3c430.firebaseapp.com",
+    projectId: "elementsembol-3c430",
+    databaseURL: "https://elementsembol-3c430-default-rtdb.firebaseio.com", 
+    storageBucket: "elementsembol-3c430.firebasestorage.app",
+    messagingSenderId: "925424889350",
+    appId: "1:925424889350:web:b7c895898c0436631b1d87"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+
+  function skorlariGetir() {
+    const skorRef = ref(database, 'skorlar');
+    const enIyilerSorgu = query(skorRef, orderByChild('puan'), limitToLast(10));
+
+    onValue(enIyilerSorgu, (snapshot) => {
+        const tbody = document.getElementById('leaderboard-body');
+        if(!tbody) return;
+        tbody.innerHTML = ""; 
+        
+        let skorlarListesi = [];
+        snapshot.forEach((childSnapshot) => {
+            const veri = childSnapshot.val();
+            if(veri && veri.puan) { // Boş verileri engelle
+                skorlarListesi.push(veri);
+            }
+        });
+
+        skorlarListesi.sort((a, b) => b.puan - a.puan);
+
+        if (skorlarListesi.length === 0) {
+            tbody.innerHTML = "<tr><td colspan='3' style='text-align:center; padding:10px;'>Henüz skor yok!</td></tr>";
+            return;
+        }
+
+        skorlarListesi.forEach((skor, index) => {
+            const tr = document.createElement('tr');
+            let sira = index + 1;
+            if (sira === 1) sira = "🥇";
+            else if (sira === 2) sira = "🥈";
+            else if (sira === 3) sira = "🥉";
+
+            tr.innerHTML = `
+                <td>${sira}</td>
+                <td>${skor.isim || "Misafir"} <small style="opacity:0.6">(${skor.adet || 0})</small></td>
+                <td style="text-align: right; font-weight: bold; color: #e67e22;">${skor.puan}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    });
+  }
+
+  skorlariGetir();
+
+  // Giriş Yap Butonu Sabitlendi
+  const loginBtn = document.getElementById('loginBtn');
+  if(loginBtn) {
+      loginBtn.onclick = function(e) {
+          e.preventDefault(); 
+          let userName = prompt("Sıralamada görünmek için ismini gir:");
+          if (userName && userName.trim() !== "") {
+              localStorage.setItem("oyuncuAdi", userName.trim());
+              window.location.href = "game.html"; 
+          }
+      };
+  }
+</script>
+
+
+
+<footer style="margin-top: 50px; padding: 20px; text-align: center; font-size: 0.8rem; opacity: 0.6;">
+    <a href="about.html" style="color: white; text-decoration: none; margin-right: 15px;">Hakkımızda</a>
+    <a href="privacy.html" style="color: white; text-decoration: none;">Gizlilik Politikası</a>
+</footer>
+
+</body>
+</html>

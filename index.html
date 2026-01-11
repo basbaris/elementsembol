@@ -2,8 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3621075517031656"
-     crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3621075517031656" crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Element Avcısı Pro - Kimya Sembol Eşleştirme Oyunu</title>
     <meta name="description" content="Periyodik tablo elementlerini eğlenerek öğrenin. En yüksek puanı toplayın ve dünya sıralamasına girin!">
@@ -20,7 +19,7 @@
         </div>
         
         <div class="landing-buttons">
-            <a href="game.html" class="btn-start" onclick="localStorage.removeItem('oyuncuAdi')">Oyunu Başlat</a>
+            <a href="game.html" class="btn-start" id="startBtn">Oyunu Başlat</a>
             <a href="#" class="btn-login" id="loginBtn">İsimle Giriş Yap</a>
         </div>
 
@@ -29,9 +28,9 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Sıra</th>
-                        <th>Oyuncu</th>
-                        <th style="text-align: right;">Puan</th>
+                        <th style="width: 20%;">Sıra</th>
+                        <th style="width: 50%;">Oyuncu</th>
+                        <th style="text-align: right; width: 30%;">Puan</th>
                     </tr>
                 </thead>
                 <tbody id="leaderboard-body">
@@ -60,81 +59,105 @@
   const app = initializeApp(firebaseConfig);
   const database = getDatabase(app);
 
+  window.addEventListener('DOMContentLoaded', () => {
+      const savedName = localStorage.getItem("oyuncuAdi");
+      const loginBtn = document.getElementById('loginBtn');
+      if (savedName && loginBtn) {
+          loginBtn.innerText = "Hoş Geldin, " + savedName;
+          loginBtn.style.background = "#27ae60";
+      }
+      skorlariGetir();
+  });
+
   function skorlariGetir() {
     const skorRef = ref(database, 'skorlar');
-    const enIyilerSorgu = query(skorRef, orderByChild('puan'), limitToLast(10));
+    const enIyilerSorgu = query(skorRef, orderByChild('puan'), limitToLast(50));
 
     onValue(enIyilerSorgu, (snapshot) => {
         const tbody = document.getElementById('leaderboard-body');
         if(!tbody) return;
-        tbody.innerHTML = ""; 
         
-        let skorlarListesi = [];
-        snapshot.forEach((childSnapshot) => {
-            const veri = childSnapshot.val();
-            if(veri && veri.puan) { // Boş verileri engelle
-                skorlarListesi.push(veri);
-            }
+        let tumSkorlar = [];
+        snapshot.forEach((child) => {
+            const veri = child.val();
+            if(veri && veri.puan) { tumSkorlar.push(veri); }
         });
 
-        skorlarListesi.sort((a, b) => b.puan - a.puan);
+        tumSkorlar.sort((a, b) => b.puan - a.puan);
 
-        if (skorlarListesi.length === 0) {
+        let finalSkorlar = [];
+        let gorulenIsimler = new Set();
+
+        for (let skor of tumSkorlar) {
+            let isimKey = (skor.isim || "Misafir").toString().trim().toLowerCase();
+            if (!gorulenIsimler.has(isimKey)) {
+                finalSkorlar.push(skor);
+                gorulenIsimler.add(isimKey);
+            }
+            if (finalSkorlar.length === 10) break;
+        }
+
+        tbody.innerHTML = ""; 
+
+        if (finalSkorlar.length === 0) {
             tbody.innerHTML = "<tr><td colspan='3' style='text-align:center; padding:10px;'>Henüz skor yok!</td></tr>";
             return;
         }
 
-        skorlarListesi.forEach((skor, index) => {
+        finalSkorlar.forEach((skor, index) => {
             const tr = document.createElement('tr');
             let sira = index + 1;
-            if (sira === 1) sira = "🥇";
-            else if (sira === 2) sira = "🥈";
-            else if (sira === 3) sira = "🥉";
+            let emoji = (sira === 1) ? "🥇" : (sira === 2) ? "🥈" : (sira === 3) ? "🥉" : sira;
 
             tr.innerHTML = `
-                <td>${sira}</td>
-                <td>${skor.isim || "Misafir"} <small style="opacity:0.6">(${skor.adet || 0})</small></td>
-                <td style="text-align: right; font-weight: bold; color: #e67e22;">${skor.puan}</td>
+                <td style="padding:10px; text-align:center;">${emoji}</td>
+                <td style="padding:10px;">${skor.isim || "Misafir"}</td>
+                <td style="padding:10px; text-align: right; font-weight: bold; color: #e67e22;">${skor.puan}</td>
             `;
             tbody.appendChild(tr);
         });
     });
   }
 
-  skorlariGetir();
+  document.getElementById('loginBtn').onclick = function(e) {
+      e.preventDefault(); 
+      let userName = prompt("Sıralamada görünmek için ismini gir:");
+      if (userName && userName.trim() !== "") {
+          localStorage.setItem("oyuncuAdi", userName.trim());
+          this.innerText = "Hoş Geldin, " + userName.trim();
+          this.style.background = "#27ae60";
+          window.location.href = "game.html"; 
+      }
+  };
 
-  // Giriş Yap Butonu Sabitlendi
-  const loginBtn = document.getElementById('loginBtn');
-  if(loginBtn) {
-      loginBtn.onclick = function(e) {
-          e.preventDefault(); 
-          let userName = prompt("Sıralamada görünmek için ismini gir:");
-          if (userName && userName.trim() !== "") {
-              localStorage.setItem("oyuncuAdi", userName.trim());
-              window.location.href = "game.html"; 
-          }
-      };
-  }
+  document.getElementById('startBtn').onclick = function(e) {
+      if(!localStorage.getItem("oyuncuAdi")) {
+          e.preventDefault();
+          alert("Lütfen önce 'İsimle Giriş Yap' butonuna tıklayarak isminizi girin.");
+      }
+  };
 </script>
 
-<section id="hakkinda" style="padding: 20px; color: white;">
+<section id="hakkinda" style="padding: 20px; color: white; margin-top: 30px;">
     <h2>Element Avcısı Hakkında</h2>
     <p>Bu oyun, kimya öğrenen öğrencilerin element sembollerini eğlenceli bir şekilde ezberlemesi için tasarlanmıştır...</p>
 </section>
+
 <section id="nasil-oynanir" style="padding: 30px; background: rgba(255,255,255,0.05); border-radius: 15px; margin: 20px 0; color: white;">
     <h2 style="color: #e67e22; text-align: center;">🎮 Nasıl Oynanır?</h2>
     <div style="display: flex; flex-direction: column; gap: 15px;">
         <p><strong>3 Can Hakkı:</strong> Toplamda 3 hata yapma hakkın var. Dikkatli ol!</p>
         <p><strong>Puanlama:</strong> Her doğru sembol eşleştirmesi seni dünya sıralamasında yukarı taşır.</p>
         <p><strong>Oyun Sonu:</strong> Canların tükendiğinde skorun otomatik olarak Firebase tabanlı dünya sıralamasına kaydedilir.</p>
-        <p><strong>Butonlar:</strong>Kaç tane element arasından veya hangi grup elementler arasından kaç kartla eşleştirme yapmak istiyorsanız üst panelden seçebilirsiniz</p>
+        <p><strong>Butonlar:</strong> Kaç tane element arasından veya hangi grup elementler arasından kaç kartla eşleştirme yapmak istiyorsanız üst panelden seçebilirsiniz.</p>
     </div>
 </section>
-
 
 <footer style="margin-top: 50px; padding: 20px; text-align: center; font-size: 0.8rem; opacity: 0.6;">
     <a href="about.html" style="color: white; text-decoration: none; margin-right: 15px;">Hakkımızda</a>
     <a href="privacy.html" style="color: white; text-decoration: none;">Gizlilik Politikası</a>
+    <a href="contact.html" style="color: white; text-decoration: none; margin-right: 15px;">Bize Ulaşın</a>
+
 </footer>
 
 </body>

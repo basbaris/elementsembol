@@ -1,37 +1,26 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-import { getDatabase, ref, push, set, query, orderByChild, limitToLast, get } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+import { getDatabase, ref, push, get, query, orderByChild, limitToLast } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
-// --- SES AYARLARI ---
-const correctSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3');
-const errorSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3');
-correctSound.volume = 0.5;
-errorSound.volume = 0.5;
-let isMuted = false;
-
-// --- FIREBASE AYARLARI ---
+// --- KONFİGÜRASYON ---
 const firebaseConfig = {
     apiKey: "AIzaSyDl4aJYLl4OHqqX2u0UuC34dUbpcyQdgMY",
     authDomain: "elementsembol-3c430.firebaseapp.com",
+    databaseURL: "https://elementsembol-3c430-default-rtdb.firebaseio.com",
     projectId: "elementsembol-3c430",
     storageBucket: "elementsembol-3c430.firebasestorage.app",
     messagingSenderId: "925424889350",
-    appId: "1:925424889350:web:b7c895898c0436631b1d87",
-    measurementId: "G-5WTQFZ6Y63"
+    appId: "1:925424889350:web:b7c895898c0436631b1d87"
 };
+
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
 // --- DEĞİŞKENLER ---
-let timerInterval = null; 
-let startTime = null;
-let selectedSymbol = null;
-let selectedName = null;
-let puan = 0;
-let can = 3;
-let timerStarted = false; // Süre başlangıçta kapalı, ilk tıklamayı bekler
-let gameTotalStartTime = null;
-let gameStartTime = null;
-let gameActive = true; // Oyunun o an oynanabilir olup olmadığını tutar
+let timerInterval, gameStartTime, startTime, selectedSymbol, selectedName;
+let puan = 0, can = 3, timerStarted = false, gameActive = true, isMuted = false;
+
+const correctSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3');
+const errorSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3');
 
 const allElements = [
     {s:"H",n:"Hidrojen",g:"nonmetal"},{s:"He",n:"Helyum",g:"noble"},{s:"Li",n:"Lityum",g:"alkali"},{s:"Be",n:"Berilyum",g:"earth"},
@@ -66,132 +55,126 @@ const allElements = [
     {s:"Ts",n:"Tennessin",g:"nonmetal"},{s:"Og",n:"Oganesson",g:"noble"}
 ];
 
-// --- SAYFA YÜKLENDİĞİNDE BUTON VE İSİM AYARLARI ---
-window.addEventListener('DOMContentLoaded', () => {
-    const muteBtn = document.getElementById('mute-btn');
-    if (muteBtn) {
-        muteBtn.onclick = () => {
-            isMuted = !isMuted;
-            muteBtn.innerText = isMuted ? "🔇" : "🔊";
-            correctSound.muted = isMuted;
-            errorSound.muted = isMuted;
-            muteBtn.style.opacity = isMuted ? "0.6" : "1";
-        };
-    }
-    const kaydedilenAd = localStorage.getItem("oyuncuAdi");
-    const nameDisplay = document.getElementById("player-name");
-    if (kaydedilenAd && nameDisplay) nameDisplay.innerText = kaydedilenAd;
-});
-
-// --- SKOR KAYIT VE LİDERLİK TABLOSU ---
-async function liderlikTablosunuGuncelle() {
-    const skorRef = ref(database, 'skorlar');
-    const sorgu = query(skorRef, orderByChild('puan'), limitToLast(50));
+// --- FIREBASE İŞLEMLERİ ---
+async function skoruKaydet(sonPuan) {
+    const isim = localStorage.getItem("oyuncuAdi") || "Misafir";
     try {
-        const snapshot = await get(sorgu);
-        const tbody = document.getElementById('leaderboard-body');
-        if (!tbody) return;
-        tbody.innerHTML = ""; 
-        let tumSkorlar = [];
-        snapshot.forEach((childSnapshot) => { tumSkorlar.push(childSnapshot.val()); });
-        tumSkorlar.sort((a, b) => b.puan - a.puan);
-        let benzersizSkorlar = [];
-        let isimlerSet = new Set();
-        for (let s of tumSkorlar) {
-            if (!isimlerSet.has(s.isim)) {
-                benzersizSkorlar.push(s);
-                isimlerSet.add(s.isim);
-            }
-            if (benzersizSkorlar.length === 10) break;
-        }
-        benzersizSkorlar.forEach((skor, index) => {
-            const row = `<tr><td style="padding:8px; border-bottom:1px solid #eee; text-align:center;">${index+1}</td><td style="padding:8px; border-bottom:1px solid #eee;">${skor.isim}</td><td style="padding:8px; border-bottom:1px solid #eee; font-weight:bold; color:#e67e22;">${skor.puan}</td></tr>`;
-            tbody.innerHTML += row;
+        await push(ref(database, 'skorlar'), {
+            isim: isim,
+            puan: parseInt(sonPuan),
+            tarih: new Date().toLocaleString()
         });
-    } catch (error) { console.error("Skor çekme hatası:", error); }
+    } catch (e) { console.error("Kayıt hatası:", e); }
 }
 
-function skoruKaydet(puanDegeri) {
-    const oyuncuAdi = localStorage.getItem("oyuncuAdi") || "Misafir";
-    push(ref(database, 'skorlar'), {
-        isim: oyuncuAdi,
-        puan: puanDegeri,
-        tarih: new Date().toLocaleStrin()
-    });
+async function liderlikTablosunuGuncelle() {
+    const tbody = document.getElementById('leaderboard-body');
+    if (!tbody) return;
+    try {
+        const snapshot = await get(query(ref(database, 'skorlar'), orderByChild('puan'), limitToLast(50)));
+        let list = [];
+        snapshot.forEach(child => { list.push(child.val()); });
+        list.sort((a,b) => b.puan - a.puan);
+        
+        let unique = [], names = new Set();
+        for(let s of list) {
+            let n = s.isim.trim().toLowerCase();
+            if(!names.has(n)) { unique.push(s); names.add(n); }
+            if(unique.length >= 10) break;
+        }
+        tbody.innerHTML = unique.map((s, i) => `
+            <tr>
+                <td style="padding:10px; text-align:center;">${i+1}</td>
+                <td style="padding:10px;">${s.isim}</td>
+                <td style="padding:10px; text-align:right; font-weight:bold; color:#e67e22;">${s.puan}</td>
+            </tr>`).join('');
+    } catch (e) { console.error("Tablo hatası:", e); }
+}
+
+// --- OYUN BİTİŞ PANELİ VE WHATSAPP ---
+async function oyunuBitir() {
+    gameActive = false;
+    if (timerInterval) clearInterval(timerInterval);
+    
+    const toplamSure = document.getElementById('live-timer').innerText;
+    const finalPuan = puan;
+    
+    // Paneli göster ve bilgileri yaz
+    const panel = document.getElementById('game-over-panel');
+    const scoreText = document.getElementById('final-score-text');
+    
+    if (panel && scoreText) {
+        panel.style.display = 'block';
+        scoreText.innerHTML = `Puan: <b>${finalPuan}</b> <br> Süre: <b>${toplamSure}</b> sn`;
+    }
+
+    // WhatsApp Butonu Ayarı
+    const waBtn = document.getElementById('whatsapp-btn');
+    if (waBtn) {
+        waBtn.onclick = () => {
+            const mesaj = `Element Avcısı Pro'da ${finalPuan} puan yaptım ve periyodik tabloyu ${toplamSure} saniyede fethettim! 🚀 Sen beni geçebilir misin?`;
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(mesaj)}`, '_blank');
+        };
+    }
+
+    // Kaydet ve Tabloyu Yenile
+    await skoruKaydet(finalPuan);
+    liderlikTablosunuGuncelle();
 }
 
 // --- OYUN MANTIĞI ---
-function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
-
 function initGame() {
-    const symbolCol = document.getElementById('symbol-col');
-    const nameCol = document.getElementById('name-col');
-    const rangeVal = parseInt(document.getElementById('elementRange').value) || 118;
-    const groupVal = document.getElementById('groupFilter').value;
-    const countVal = parseInt(document.getElementById('elementCount').value) || 10;
-    
-    // Değerleri sıfırla
-    puan = 0;
-    can = 3;
-    gameActive = true; // Her yeni oyunda kilidi aç
-    // 
-    timerStarted = false;
+    const sCol = document.getElementById('symbol-col');
+    const nCol = document.getElementById('name-col');
+    const panel = document.getElementById('game-over-panel');
+    if (!sCol || !nCol) return;
+
+    if (panel) panel.style.display = 'none'; // Yeni oyunda paneli gizle
+    puan = 0; can = 3; timerStarted = false; gameActive = true;
     if (timerInterval) clearInterval(timerInterval);
+
     document.getElementById('puan-degeri').innerText = "0";
-    document.getElementById('can-degeri').innerText = "❤️".repeat(can);
+    document.getElementById('can-degeri').innerText = "❤️".repeat(3);
     document.getElementById('live-timer').innerText = "0";
+
+    const range = parseInt(document.getElementById('elementRange').value) || 118;
+    const count = parseInt(document.getElementById('elementCount').value) || 10;
+    const group = document.getElementById('groupFilter').value;
+
+    let pool = allElements.slice(0, range);
+    if (group !== "all") pool = pool.filter(el => el.g === group);
+    const gamePool = pool.sort(() => Math.random() - 0.5).slice(0, count);
     
-    if (!symbolCol || !nameCol) return;
-    symbolCol.innerHTML = '';
-    nameCol.innerHTML = '';
+    sCol.innerHTML = ''; nCol.innerHTML = '';
+    [...gamePool].sort(() => Math.random() - 0.5).forEach(el => sCol.appendChild(createCard(el.s, 'symbol', el.s, el.g)));
+    [...gamePool].sort(() => Math.random() - 0.5).forEach(el => nCol.appendChild(createCard(el.n, 'name', el.s, el.g)));
     
-    let pool = allElements.slice(0, Math.min(rangeVal, allElements.length));
-    if (groupVal !== "all") pool = pool.filter(el => el.g === groupVal);
-    
-    const gamePool = shuffle([...pool]).slice(0, Math.min(countVal, pool.length));
-    if (gamePool.length === 0) { symbolCol.innerHTML = "<p>Bulunamadı</p>"; return; }
-    
-    shuffle([...gamePool]).forEach(el => symbolCol.appendChild(createCard(el.s, 'symbol', el.s, el.g)));
-    shuffle([...gamePool]).forEach(el => nameCol.appendChild(createCard(el.n, 'name', el.s, el.g)));
-    
-    selectedSymbol = null;
-    selectedName = null;
+    liderlikTablosunuGuncelle();
 }
 
-function createCard(text, type, matchId, group) {
-    const div = document.createElement('div');
-    div.classList.add('card', 'group-' + group);
-    div.innerText = text;
-    div.dataset.match = matchId;
-    div.dataset.type = type;
-    div.onclick = handleCardClick;
-    return div;
+function createCard(txt, type, mid, grp) {
+    const d = document.createElement('div');
+    d.className = `card group-${grp}`;
+    d.innerText = txt;
+    d.dataset.match = mid;
+    d.dataset.type = type;
+    d.onclick = handleCardClick;
+    return d;
 }
 
 function handleCardClick() {
-    // 1. KONTROL: Eğer oyun durdurulduysa veya can bittiyse tıklamaya izin verme
-    if (typeof gameActive !== 'undefined' && !gameActive) return;
-    if (can <= 0) return;
+    if (!gameActive || this.classList.contains('hidden') || this.classList.contains('selected')) return;
 
-    // SÜRE BAŞLATMA: İlk tıklamada hem puan süresi hem de toplam oyun süresi başlar
     if (!timerStarted) {
         timerStarted = true;
-        startTime = Date.now();      // Puan hesabı için (her doğru eşleşmede sıfırlanır)
-        gameStartTime = Date.now();  // Toplam oyun süresi için (sabit kalır)
-        
+        gameStartTime = Date.now();
+        startTime = Date.now();
         timerInterval = setInterval(() => {
-            const timerDisplay = document.getElementById('live-timer');
-            if (timerDisplay) {
-                // Ekranda görünen süreyi gameStartTime üzerinden hesapla ki puan sıfırlansa da o artmaya devam etsin
-                timerDisplay.innerText = Math.floor((Date.now() - gameStartTime) / 1000);
-            }
+            const timerEl = document.getElementById('live-timer');
+            if(timerEl) timerEl.innerText = Math.floor((Date.now() - gameStartTime) / 1000);
         }, 1000);
     }
 
-    // Seçili veya gizli karta tekrar tıklanmasını engelle
-    if (this.classList.contains('hidden') || this.classList.contains('selected')) return;
-
-    // Kart seçimi mantığı
     if (this.dataset.type === 'symbol') {
         if (selectedSymbol) selectedSymbol.classList.remove('selected');
         selectedSymbol = this;
@@ -201,92 +184,55 @@ function handleCardClick() {
     }
     this.classList.add('selected');
 
-    // İki kart da seçildiyse kontrol başlar
     if (selectedSymbol && selectedName) {
-        const s = selectedSymbol;
-        const n = selectedName;
-
+        const s = selectedSymbol, n = selectedName;
         if (s.dataset.match === n.dataset.match) {
-            // --- DOĞRU EŞLEŞME DURUMU ---
             if (!isMuted) correctSound.play();
             
-            // Puan Hesaplama (Senin orijinal formülün)
-            const hamleSuresi = Math.max(1, Math.floor((Date.now() - startTime) / 1000));
-            const havuzGenisligi = parseInt(document.getElementById('elementRange').value) || 118;
-            const hamlePuani = Math.floor((1000 / hamleSuresi) * (1 + (havuzGenisligi / 118)));
+            let hamleSuresi = Math.max(1, Math.floor((Date.now() - startTime) / 1000));
+            let havuzGenisligi = parseInt(document.getElementById('elementRange').value) || 118;
+            puan += Math.floor((1000 / hamleSuresi) * (1 + (havuzGenisligi / 118)));
             
-            puan += hamlePuani;
-            const puanGosterge = document.getElementById('puan-degeri');
-            if (puanGosterge) puanGosterge.innerText = puan;
-
-            s.classList.add('correct-flash');
-            n.classList.add('correct-flash');
-
-            // Temizlik
-            selectedSymbol = null;
-            selectedName = null;
-            startTime = Date.now(); // Bir sonraki doğru için hamle süresini sıfırla
+            document.getElementById('puan-degeri').innerText = puan;
+            s.classList.add('correct-flash'); n.classList.add('correct-flash');
+            selectedSymbol = null; selectedName = null;
+            startTime = Date.now();
 
             setTimeout(() => {
-                s.classList.add('hidden');
-                n.classList.add('hidden');
-                checkVictory(); // Zafer kontrolü
+                s.classList.add('hidden'); n.classList.add('hidden');
+                if (document.querySelectorAll('.card:not(.hidden)').length === 0) {
+                    oyunuBitir();
+                }
             }, 400);
-
         } else {
-            // --- YANLIŞ EŞLEŞME DURUMU ---
-            selectedSymbol = null;
-            selectedName = null;
-
             if (!isMuted) errorSound.play();
-            s.classList.add('error-shake');
-            n.classList.add('error-shake');
-            
+            s.classList.add('error-shake'); n.classList.add('error-shake');
             can--;
-            const canGosterge = document.getElementById('can-degeri');
-            if (canGosterge) canGosterge.innerText = "❤️".repeat(Math.max(0, can));
-
-            // CAN BİTTİ Mİ?
+            document.getElementById('can-degeri').innerText = "❤️".repeat(Math.max(0, can));
+            selectedSymbol = null; selectedName = null;
             if (can <= 0) {
-                gameActive = false; // Oyunu anında kilitle
-                clearInterval(timerInterval);
-                
-                // Toplam süreyi hesapla
-                const toplamSure = Math.floor((Date.now() - gameStartTime) / 1000);
-
+                setTimeout(() => { oyunuBitir(); }, 500);
+            } else {
                 setTimeout(() => {
-                    alert(`OYUN BİTTİ!\n\nToplam Süre: ${toplamSure} saniye\nToplam Puan: ${puan}`);
-                    skoruKaydet(puan);
-                    window.location.href = "index.html";
-                }, 500); 
-                return; // Yanlış animasyonu bitmeden fonksiyondan çık
+                    s.classList.remove('selected', 'error-shake');
+                    n.classList.remove('selected', 'error-shake');
+                }, 500);
             }
-
-            setTimeout(() => {
-                s.classList.remove('selected', 'error-shake');
-                n.classList.remove('selected', 'error-shake');
-            }, 500);
         }
     }
 }
 
-
-function checkVictory() {
-    const total = document.querySelectorAll('.card').length;
-    const hidden = document.querySelectorAll('.card.hidden').length;
-    if (hidden === total && total > 0) {
-        clearInterval(timerInterval);
-// OYUNUN TOPLAM SÜRESİNİ HESAPLIYORUZ (Süre durduğu an)
-        const oyunBitisAni = Date.now();
-        const toplamGecenSure = Math.floor((oyunBitisAni - gameStartTime) / 1000); 
-
-        alert(`TEBRİKLER! Tüm elementleri buldun.\nToplam Süre: ${toplamGecenSure} saniye\nToplam Puanın: ${puan}`);
-        
-        skoruKaydet(puan);
-        window.location.href = "index.html";
+window.addEventListener('DOMContentLoaded', () => {
+    const mBtn = document.getElementById('mute-btn');
+    if (mBtn) {
+        mBtn.onclick = () => {
+            isMuted = !isMuted;
+            mBtn.innerText = isMuted ? "🔇" : "🔊";
+        };
     }
-}
+    const pDisp = document.getElementById("player-name");
+    if (pDisp) pDisp.innerText = localStorage.getItem("oyuncuAdi") || "Misafir";
+    initGame();
+});
 
-// Global olarak tanımla
 window.initGame = initGame;
-window.onload = initGame;

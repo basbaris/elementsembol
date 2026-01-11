@@ -2,30 +2,88 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3621075517031656"
-     crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3621075517031656" crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hakkımızda - Element Avcısı Pro</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        body { font-family: sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 40px auto; padding: 20px; background-color: #f4f4f9; }
-        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h1 { color: #2c3e50; }
-        .back-link { display: inline-block; margin-bottom: 20px; color: #3498db; text-decoration: none; }
+        /* Senin o sevdiğin koyu tema ve cam efektini bu sayfaya da uyguluyoruz */
+        .about-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+            background: radial-gradient(circle, #2c3e50 0%, #000000 100%) no-repeat center center fixed;
+            color: white;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .about-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 100%;
+            max-width: 700px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: left; /* Okunabilirlik için metni sola yasladık */
+        }
+
+        h1, h2 {
+            color: #e67e22;
+            text-align: center;
+        }
+
+        p {
+            line-height: 1.8;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            color: white;
+            text-decoration: none;
+            opacity: 0.6;
+            transition: 0.3s;
+        }
+
+        .back-link:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+
+        strong {
+            color: #3498db;
+        }
     </style>
 </head>
 <body>
-    <div class="card">
-        <a href="index.html" class="back-link">← Ana Sayfaya Dön</a>
-        <h1>Hakkımızda</h1>
-        <p><strong>Element Avcısı Pro</strong>, kimya eğitimini dijital oyunlaştırma ile birleştiren bir öğrenme platformudur.</p>
-        
-        <p>Amacımız, periyodik tablodaki elementleri ve sembollerini ezberlemek yerine, eğlenceli ve rekabetçi bir ortamda kalıcı olarak öğretmektir. Dünya sıralaması özelliğimiz sayesinde kullanıcılar kendilerini geliştirirken diğer oyuncularla yarışma fırsatı bulurlar.</p>
 
-        <h2>Vizyonumuz</h2>
-        <p>Eğitici oyunlar aracılığıyla bilimi herkes için daha erişilebilir ve keyifli hale getirmek.</p>
+    <div class="about-container">
+        <div class="about-card">
+            <h1>Hakkımızda</h1>
+            
+            <p><strong>Element Avcısı Pro</strong>, kimya eğitimini dijital oyunlaştırma ile birleştiren bir öğrenme platformudur.</p>
+            
+            <p>Amacımız, periyodik tablodaki elementleri ve sembollerini ezberlemek yerine, eğlenceli ve rekabetçi bir ortamda kalıcı olarak öğretmektir. Dünya sıralaması özelliğimiz sayesinde kullanıcılar kendilerini geliştirirken diğer oyuncularla yarışma fırsatı bulurlar.</p>
 
-        <h2>İletişim</h2>
-        <p>Proje hakkında geri bildirimleriniz veya iş birliği talepleriniz için bize ulaşmaktan çekinmeyin.</p>
+            <h2>Vizyonumuz</h2>
+            <p>Eğitici oyunlar aracılığıyla bilimi herkes için daha erişilebilir ve keyifli hale getirmek.</p>
+
+            <h2>İletişim</h2>
+            <p>Proje hakkında geri bildirimleriniz veya iş birliği talepleriniz için bize ulaşmaktan çekinmeyin.</p>
+
+            <a href="index.html" class="back-link">← Ana Sayfaya Dön</a>
+        </div>
     </div>
+
 </body>
 </html>

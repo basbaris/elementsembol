@@ -1,32 +1,14 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
 import { getDatabase, ref, push, set, query, orderByChild, limitToLast, get } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
-// Ses efektleri (Ücretsiz ve hızlı linkler)
+// --- SES AYARLARI ---
 const correctSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3');
 const errorSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3');
-
-// Ses seviyesini biraz kısalım (isteğe bağlı)
 correctSound.volume = 0.5;
 errorSound.volume = 0.5;
 let isMuted = false;
 
-// Sayfa yüklendiğinde butonun çalışmasını sağla
-window.addEventListener('DOMContentLoaded', () => {
-    const muteBtn = document.getElementById('mute-btn');
-    if (muteBtn) {
-        muteBtn.onclick = () => {
-            isMuted = !isMuted;
-            muteBtn.innerText = isMuted ? "🔇" : "🔊";
-            // Ses seviyelerini ayarla
-            correctSound.muted = isMuted;
-            errorSound.muted = isMuted;
-            // Butona tıklandığında hafif bir şeffaflık vererek görsel geri bildirim ekleyelim
-            muteBtn.style.opacity = isMuted ? "0.6" : "1";
-        };
-    }
-});
-
-
+// --- FIREBASE AYARLARI ---
 const firebaseConfig = {
     apiKey: "AIzaSyDl4aJYLl4OHqqX2u0UuC34dUbpcyQdgMY",
     authDomain: "elementsembol-3c430.firebaseapp.com",
@@ -36,15 +18,20 @@ const firebaseConfig = {
     appId: "1:925424889350:web:b7c895898c0436631b1d87",
     measurementId: "G-5WTQFZ6Y63"
 };
-
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-// Değişkenler
+// --- DEĞİŞKENLER ---
 let timerInterval = null; 
 let startTime = null;
 let selectedSymbol = null;
 let selectedName = null;
+let puan = 0;
+let can = 3;
+let timerStarted = false; // Süre başlangıçta kapalı, ilk tıklamayı bekler
+let gameTotalStartTime = null;
+let gameStartTime = null;
+let gameActive = true; // Oyunun o an oynanabilir olup olmadığını tutar
 
 const allElements = [
     {s:"H",n:"Hidrojen",g:"nonmetal"},{s:"He",n:"Helyum",g:"noble"},{s:"Li",n:"Lityum",g:"alkali"},{s:"Be",n:"Berilyum",g:"earth"},
@@ -79,129 +66,90 @@ const allElements = [
     {s:"Ts",n:"Tennessin",g:"nonmetal"},{s:"Og",n:"Oganesson",g:"noble"}
 ];
 
-// BAŞLANGIÇ AYARLARI
+// --- SAYFA YÜKLENDİĞİNDE BUTON VE İSİM AYARLARI ---
 window.addEventListener('DOMContentLoaded', () => {
+    const muteBtn = document.getElementById('mute-btn');
+    if (muteBtn) {
+        muteBtn.onclick = () => {
+            isMuted = !isMuted;
+            muteBtn.innerText = isMuted ? "🔇" : "🔊";
+            correctSound.muted = isMuted;
+            errorSound.muted = isMuted;
+            muteBtn.style.opacity = isMuted ? "0.6" : "1";
+        };
+    }
     const kaydedilenAd = localStorage.getItem("oyuncuAdi");
     const nameDisplay = document.getElementById("player-name");
     if (kaydedilenAd && nameDisplay) nameDisplay.innerText = kaydedilenAd;
 });
 
-// LİDERLİK TABLOSUNU ÇEKME
+// --- SKOR KAYIT VE LİDERLİK TABLOSU ---
 async function liderlikTablosunuGuncelle() {
     const skorRef = ref(database, 'skorlar');
-    // Daha fazla veri çekiyoruz ki içinden benzersiz olanları ayıklayabilelim
     const sorgu = query(skorRef, orderByChild('puan'), limitToLast(50));
-    
     try {
         const snapshot = await get(sorgu);
         const tbody = document.getElementById('leaderboard-body');
         if (!tbody) return;
-        
         tbody.innerHTML = ""; 
         let tumSkorlar = [];
-
-        snapshot.forEach((childSnapshot) => {
-            tumSkorlar.push(childSnapshot.val());
-        });
-
-        // Puanları büyükten küçüğe sırala
+        snapshot.forEach((childSnapshot) => { tumSkorlar.push(childSnapshot.val()); });
         tumSkorlar.sort((a, b) => b.puan - a.puan);
-
-        // AYNI İSİMLERİ ELİYECEK MANTIK
         let benzersizSkorlar = [];
         let isimlerSet = new Set();
-
         for (let s of tumSkorlar) {
             if (!isimlerSet.has(s.isim)) {
                 benzersizSkorlar.push(s);
                 isimlerSet.add(s.isim);
             }
-            if (benzersizSkorlar.length === 10) break; // Sadece ilk 10 benzersiz kişiyi al
+            if (benzersizSkorlar.length === 10) break;
         }
-
         benzersizSkorlar.forEach((skor, index) => {
-            const row = `
-                <tr>
-                    <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: center;">${index + 1}</td>
-                    <td style="padding: 8px; border-bottom: 1px solid #eee;">${skor.isim}</td>
-                    <td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold; color: #e67e22;">${skor.puan}</td>
-                </tr>
-            `;
+            const row = `<tr><td style="padding:8px; border-bottom:1px solid #eee; text-align:center;">${index+1}</td><td style="padding:8px; border-bottom:1px solid #eee;">${skor.isim}</td><td style="padding:8px; border-bottom:1px solid #eee; font-weight:bold; color:#e67e22;">${skor.puan}</td></tr>`;
             tbody.innerHTML += row;
         });
-    } catch (error) {
-        console.error("Skorlar çekilirken hata oluştu:", error);
-    }
+    } catch (error) { console.error("Skor çekme hatası:", error); }
 }
 
-// OYUN BİTİŞ PANELİ
-window.oyunBittiGoster = function(puan, sure) {
-    const panel = document.getElementById('game-over-panel');
-    const scoreText = document.getElementById('final-score-text');
-    const waBtn = document.getElementById('whatsapp-btn');
-    
-    if(panel) {
-        panel.style.display = 'block'; 
-        scoreText.innerHTML = `Tebrikler!<br>${sure} saniyede ${puan} puan topladın!`;
-        
-        // WHATSAPP LİNKİ DÜZELTİLDİ
-        waBtn.onclick = function() {
-            const msg = `🧪 Element Avcısı Pro'da ${sure} saniyede ${puan} puan topladım! Beni geçebilir misin? 🚀\n${window.location.origin}`;
-            window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
-        };
-        
-        setTimeout(() => panel.scrollIntoView({ behavior: 'smooth' }), 300);
-        liderlikTablosunuGuncelle(); // Tabloyu tazele
-    }
-}
-
-// SKOR KAYDI
-function skoruKaydet(gecenSure, miktar, puan) {
+function skoruKaydet(puanDegeri) {
     const oyuncuAdi = localStorage.getItem("oyuncuAdi") || "Misafir";
-    set(push(ref(database, 'skorlar')), {
+    push(ref(database, 'skorlar'), {
         isim: oyuncuAdi,
-        sure: gecenSure,
-        adet: miktar,
-        puan: puan,
-        tarih: new Date().toLocaleString()
+        puan: puanDegeri,
+        tarih: new Date().toLocaleStrin()
     });
 }
 
-function shuffle(array) {
-    return array.sort(() => Math.random() - 0.5);
-}
+// --- OYUN MANTIĞI ---
+function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
 
-// OYUNU BAŞLAT
 function initGame() {
     const symbolCol = document.getElementById('symbol-col');
     const nameCol = document.getElementById('name-col');
     const rangeVal = parseInt(document.getElementById('elementRange').value) || 118;
     const groupVal = document.getElementById('groupFilter').value;
     const countVal = parseInt(document.getElementById('elementCount').value) || 10;
-    const panel = document.getElementById('game-over-panel');
     
-    if(panel) panel.style.display = 'none';
+    // Değerleri sıfırla
+    puan = 0;
+    can = 3;
+    gameActive = true; // Her yeni oyunda kilidi aç
+    // 
+    timerStarted = false;
+    if (timerInterval) clearInterval(timerInterval);
+    document.getElementById('puan-degeri').innerText = "0";
+    document.getElementById('can-degeri').innerText = "❤️".repeat(can);
+    document.getElementById('live-timer').innerText = "0";
+    
     if (!symbolCol || !nameCol) return;
-    
     symbolCol.innerHTML = '';
     nameCol.innerHTML = '';
-    startTime = Date.now();
-    
-    if (timerInterval) clearInterval(timerInterval);
-    timerInterval = setInterval(() => {
-        const timerDisplay = document.getElementById('live-timer');
-        if (timerDisplay) timerDisplay.innerText = Math.floor((Date.now() - startTime) / 1000);
-    }, 1000);
     
     let pool = allElements.slice(0, Math.min(rangeVal, allElements.length));
     if (groupVal !== "all") pool = pool.filter(el => el.g === groupVal);
     
     const gamePool = shuffle([...pool]).slice(0, Math.min(countVal, pool.length));
-    
-    if (gamePool.length === 0) {
-        symbolCol.innerHTML = "<p>Bulunamadı</p>";
-        return;
-    }
+    if (gamePool.length === 0) { symbolCol.innerHTML = "<p>Bulunamadı</p>"; return; }
     
     shuffle([...gamePool]).forEach(el => symbolCol.appendChild(createCard(el.s, 'symbol', el.s, el.g)));
     shuffle([...gamePool]).forEach(el => nameCol.appendChild(createCard(el.n, 'name', el.s, el.g)));
@@ -220,25 +168,30 @@ function createCard(text, type, matchId, group) {
     return div;
 }
 
-function checkGameOver() {
-    const total = document.querySelectorAll('.card').length;
-    const hidden = document.querySelectorAll('.card.hidden').length;
-    
-    if (hidden === total && total > 0) {
-        clearInterval(timerInterval);
-        const finalTime = Math.max(1, Math.floor((Date.now() - startTime) / 1000));
-        const elementSayisi = total / 2;
-        const havuzGenisligi = parseInt(document.getElementById('elementRange').value) || 118;
-        const finalPuan = Math.floor(((elementSayisi * 1000) / finalTime) * (1 + (havuzGenisligi / 118)));
-        
-        skoruKaydet(finalTime, elementSayisi, finalPuan);
-        window.oyunBittiGoster(finalPuan, finalTime);
-    }
-}
-
 function handleCardClick() {
+    // 1. KONTROL: Eğer oyun durdurulduysa veya can bittiyse tıklamaya izin verme
+    if (typeof gameActive !== 'undefined' && !gameActive) return;
+    if (can <= 0) return;
+
+    // SÜRE BAŞLATMA: İlk tıklamada hem puan süresi hem de toplam oyun süresi başlar
+    if (!timerStarted) {
+        timerStarted = true;
+        startTime = Date.now();      // Puan hesabı için (her doğru eşleşmede sıfırlanır)
+        gameStartTime = Date.now();  // Toplam oyun süresi için (sabit kalır)
+        
+        timerInterval = setInterval(() => {
+            const timerDisplay = document.getElementById('live-timer');
+            if (timerDisplay) {
+                // Ekranda görünen süreyi gameStartTime üzerinden hesapla ki puan sıfırlansa da o artmaya devam etsin
+                timerDisplay.innerText = Math.floor((Date.now() - gameStartTime) / 1000);
+            }
+        }, 1000);
+    }
+
+    // Seçili veya gizli karta tekrar tıklanmasını engelle
     if (this.classList.contains('hidden') || this.classList.contains('selected')) return;
-    
+
+    // Kart seçimi mantığı
     if (this.dataset.type === 'symbol') {
         if (selectedSymbol) selectedSymbol.classList.remove('selected');
         selectedSymbol = this;
@@ -246,37 +199,94 @@ function handleCardClick() {
         if (selectedName) selectedName.classList.remove('selected');
         selectedName = this;
     }
-    
     this.classList.add('selected');
-    
+
+    // İki kart da seçildiyse kontrol başlar
     if (selectedSymbol && selectedName) {
         const s = selectedSymbol;
         const n = selectedName;
-        
+
         if (s.dataset.match === n.dataset.match) {
-            // DOĞRU EŞLEŞME
-            if (!isMuted) correctSound.play(); // Sadece sessizde değilse çal
+            // --- DOĞRU EŞLEŞME DURUMU ---
+            if (!isMuted) correctSound.play();
+            
+            // Puan Hesaplama (Senin orijinal formülün)
+            const hamleSuresi = Math.max(1, Math.floor((Date.now() - startTime) / 1000));
+            const havuzGenisligi = parseInt(document.getElementById('elementRange').value) || 118;
+            const hamlePuani = Math.floor((1000 / hamleSuresi) * (1 + (havuzGenisligi / 118)));
+            
+            puan += hamlePuani;
+            const puanGosterge = document.getElementById('puan-degeri');
+            if (puanGosterge) puanGosterge.innerText = puan;
+
             s.classList.add('correct-flash');
             n.classList.add('correct-flash');
+
+            // Temizlik
+            selectedSymbol = null;
+            selectedName = null;
+            startTime = Date.now(); // Bir sonraki doğru için hamle süresini sıfırla
+
             setTimeout(() => {
                 s.classList.add('hidden');
                 n.classList.add('hidden');
-                checkGameOver();
+                checkVictory(); // Zafer kontrolü
             }, 400);
+
         } else {
-            // YANLIŞ EŞLEŞME
-            if (!isMuted) errorSound.play(); // Sadece sessizde değilse çal
+            // --- YANLIŞ EŞLEŞME DURUMU ---
+            selectedSymbol = null;
+            selectedName = null;
+
+            if (!isMuted) errorSound.play();
             s.classList.add('error-shake');
             n.classList.add('error-shake');
+            
+            can--;
+            const canGosterge = document.getElementById('can-degeri');
+            if (canGosterge) canGosterge.innerText = "❤️".repeat(Math.max(0, can));
+
+            // CAN BİTTİ Mİ?
+            if (can <= 0) {
+                gameActive = false; // Oyunu anında kilitle
+                clearInterval(timerInterval);
+                
+                // Toplam süreyi hesapla
+                const toplamSure = Math.floor((Date.now() - gameStartTime) / 1000);
+
+                setTimeout(() => {
+                    alert(`OYUN BİTTİ!\n\nToplam Süre: ${toplamSure} saniye\nToplam Puan: ${puan}`);
+                    skoruKaydet(puan);
+                    window.location.href = "index.html";
+                }, 500); 
+                return; // Yanlış animasyonu bitmeden fonksiyondan çık
+            }
+
             setTimeout(() => {
                 s.classList.remove('selected', 'error-shake');
                 n.classList.remove('selected', 'error-shake');
             }, 500);
         }
-        selectedSymbol = null;
-        selectedName = null;
     }
 }
 
+
+function checkVictory() {
+    const total = document.querySelectorAll('.card').length;
+    const hidden = document.querySelectorAll('.card.hidden').length;
+    if (hidden === total && total > 0) {
+        clearInterval(timerInterval);
+// OYUNUN TOPLAM SÜRESİNİ HESAPLIYORUZ (Süre durduğu an)
+        const oyunBitisAni = Date.now();
+        const toplamGecenSure = Math.floor((oyunBitisAni - gameStartTime) / 1000); 
+
+        alert(`TEBRİKLER! Tüm elementleri buldun.\nToplam Süre: ${toplamGecenSure} saniye\nToplam Puanın: ${puan}`);
+        
+        skoruKaydet(puan);
+        window.location.href = "index.html";
+    }
+}
+
+// Global olarak tanımla
 window.initGame = initGame;
 window.onload = initGame;

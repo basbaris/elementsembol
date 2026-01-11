@@ -9,23 +9,22 @@
     <meta name="description" content="Element Avcısı ile periyodik tabloyu eğlenerek öğrenin! Element sembollerini isimleriyle eşleştirin, en yüksek skoru yapın.">
     <meta name="keywords" content="kimya oyunu, element eşleştirme, periyodik tablo, element avcısı, kimya dersi">
     <meta name="author" content="Element Avcısı Pro">
-
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="header">
         <h1>Element Avcısı</h1>
         <div id="user-display" style="font-size: 1.2rem; font-weight: bold; color: #2c3e50; margin-bottom: 10px;">
-        Oyuncu: <span id="player-name">Misafir</span>
-        <div style="font-size: 1.2rem; font-weight: bold; color: #e74c3c;">
-          Süre: <span id="live-timer">0</span> sn
-          <button id="mute-btn" title="Sesi Aç/Kapat" style="background: rgba(255,255,255,0.2); border: 1px solid #ddd; border-radius: 5px; font-size: 1.2rem; cursor: pointer; padding: 5px 10px; margin-left: 10px;">
-    🔊
-</button>
-
-</div>
-
-</div>
+            Oyuncu: <span id="player-name">Misafir</span>
+            <div style="font-size: 1.2rem; font-weight: bold; color: #e74c3c; margin-top: 5px;">
+                Süre: <span id="live-timer">0</span> sn
+                <button id="mute-btn" title="Sesi Aç/Kapat" style="background: rgba(255,255,255,0.2); border: 1px solid #ddd; border-radius: 5px; font-size: 1.2rem; cursor: pointer; padding: 5px 10px; margin-left: 10px;">🔊</button>
+            </div>
+            <div class="stats" style="margin-top: 10px; padding: 10px; background: rgba(255,255,255,0.5); border-radius: 10px; display: inline-block;">
+                <span style="color: #2c3e50;">Puan: <b id="puan-degeri">0</b></span> | 
+                <span>Can: <b id="can-degeri" style="color: #ff4757;">❤️❤️❤️</b></span>
+            </div>
+        </div>
 
         <div class="controls-container">
             <div class="control-group">
@@ -45,8 +44,7 @@
                     <option value="post">Zayıf Metaller 🟣</option>
                     <option value="lanthanide">Lantanitler 🟫</option>
                     <option value="actinide">Aktinitler 🟢</option>
-                     </select>
-
+                </select>
             </div>
             <div class="control-group">
                 <label>Kart Çifti:</label>
@@ -60,32 +58,28 @@
         <div class="column" id="symbol-col"></div>
         <div class="column" id="name-col"></div>
     </div>
-    </div> <div id="game-over-panel" style="display: none; text-align: center; margin-top: 20px; padding: 20px; background: white; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+
+    <div id="game-over-panel" style="display: none; text-align: center; margin-top: 20px; padding: 20px; background: white; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
         <h2 id="final-score-text" style="color: #2c3e50; margin-bottom: 10px;">Oyun Bitti!</h2>
         <button id="whatsapp-btn" class="btn-share" style="background-color: #25D366; color: white; border: none; padding: 12px 25px; border-radius: 25px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; margin: 0 auto; gap: 10px;">
             <span>Skorunu WhatsApp'ta Paylaş</span> 🚀
         </button>
         <div id="leaderboard-section" style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px;">
-    <h3 style="color: #2c3e50; margin-bottom: 10px;">🏆 En Yüksek Skorlar</h3>
-    <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
-        <thead>
-            <tr style="background: #f8f9fa;">
-                <th style="padding: 8px; border-bottom: 2px solid #ddd;">Sıra</th>
-                <th style="padding: 8px; border-bottom: 2px solid #ddd;">Oyuncu</th>
-                <th style="padding: 8px; border-bottom: 2px solid #ddd;">Puan</th>
-            </tr>
-        </thead>
-        <tbody id="leaderboard-body">
-            </tbody>
-    </table>
-</div>
-
+            <h3 style="color: #2c3e50; margin-bottom: 10px;">🏆 En Yüksek Skorlar</h3>
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+                <thead>
+                    <tr style="background: #f8f9fa;">
+                        <th style="padding: 8px; border-bottom: 2px solid #ddd;">Sıra</th>
+                        <th style="padding: 8px; border-bottom: 2px solid #ddd;">Oyuncu</th>
+                        <th style="padding: 8px; border-bottom: 2px solid #ddd;">Puan</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-body"></tbody>
+            </table>
+        </div>
     </div>
 
     <button class="reset-btn" onclick="initGame()">Yeniden Başlat / Karıştır</button>
-
-
     <script type="module" src="script.js"></script>
-
 </body>
 </html>

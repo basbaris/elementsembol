@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-import { getDatabase, ref, push, get, query, orderByChild, limitToLast } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+import { getDatabase, ref, push, get, query, orderByChild, limitToLast, runTransaction } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
 // --- KONFİGÜRASYON ---
 const firebaseConfig = {
@@ -11,6 +11,18 @@ const firebaseConfig = {
     messagingSenderId: "925424889350",
     appId: "1:925424889350:web:b7c895898c0436631b1d87"
 };
+// Ziyaretçi Sayısını Artırma Fonksiyonu
+function ziyaretciArtir() {
+    const ziyaretRef = ref(database, 'ziyaretciSayisi');
+    runTransaction(ziyaretRef, (currentValue) => {
+        return (currentValue || 0) + 1;
+    });
+    const listeRef = ref(database, 'ziyaretçiler');
+    push(listeRef, {
+        tarih: new Date().toLocaleString(),
+        isim: localStorage.getItem("oyuncuAdi") || "Misafir"
+    });
+}
 
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
@@ -264,6 +276,7 @@ function handleCardClick() {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+    ziyaretciArtir();
     const mBtn = document.getElementById('mute-btn');
     if (mBtn) {
         mBtn.onclick = () => {

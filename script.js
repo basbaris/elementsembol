@@ -16,8 +16,8 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
 // --- DEĞİŞKENLER ---
-let timerInterval, gameStartTime, startTime, selectedSymbol, selectedName;
-let puan = 0, can = 3, timerStarted = false, gameActive = true, isMuted = false;
+let timerInterval, hamleInterval, gameStartTime, startTime, selectedSymbol, selectedName;
+let puan = 0, can = 3, timerStarted = false, gameActive = true, isMuted = false;let kalanHamleSuresi = 10;
 
 const correctSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3');
 const errorSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3');
@@ -111,19 +111,57 @@ async function oyunuBitir() {
     // WhatsApp Butonu Ayarı
     const waBtn = document.getElementById('whatsapp-btn');
     if (waBtn) {
-        waBtn.onclick = () => {
-            const mesaj = `Element Avcısı Pro'da ${finalPuan} puan yaptım ve periyodik tabloyu ${toplamSure} saniyede fethettim! 🚀 Sen beni geçebilir misin?`;
-            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(mesaj)}`, '_blank');
-        };
+       waBtn.onclick = () => {
+        // Linki tırnak işaretlerinin içine, mesajın sonuna ekliyoruz
+            const mesaj = `Element Avcısı Pro'da ${finalPuan} puan topladım! ⚡ Hamle hızım ve bilgimle periyodik tabloyu ${toplamSure} saniyede tamamladım. Sen benden hızlı olabilir misin? 🚀 https://elementsembol.vercel.app`;
+ 
+             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(mesaj)}`, '_blank');
+         };
     }
+
 
     // Kaydet ve Tabloyu Yenile
     await skoruKaydet(finalPuan);
     liderlikTablosunuGuncelle();
 }
 
+function hamleZamanlayiciBaslat() {
+    if (hamleInterval) clearInterval(hamleInterval);
+    
+    const wrapper = document.getElementById('progress-wrapper');
+    const bar = document.getElementById('progress-bar');
+    const bonusText = document.getElementById('bonus-text');
+    
+    if (wrapper) wrapper.style.display = 'block';
+    
+    kalanHamleSuresi = 10; // Her yeni hamle için 10 saniyeden başla
+    
+    hamleInterval = setInterval(() => {
+        kalanHamleSuresi -= 0.1;
+        let yuzde = (kalanHamleSuresi / 10) * 100;
+        
+        if (bar) {
+            bar.style.width = yuzde + "%";
+            // Renk değişimi
+            if (yuzde > 60) bar.style.backgroundColor = "#27ae60";
+            else if (yuzde > 30) bar.style.backgroundColor = "#f1c40f";
+            else bar.style.backgroundColor = "#e74c3c";
+        }
+        
+        if (bonusText) bonusText.innerText = "%" + Math.max(0, Math.floor(yuzde));
+
+        if (kalanHamleSuresi <= 0) {
+            clearInterval(hamleInterval);
+            // Süre biterse bonus %0 olur ama oyun devam eder
+        }
+    }, 100);
+}
+
 // --- OYUN MANTIĞI ---
 function initGame() {
+    if (hamleInterval) clearInterval(hamleInterval);
+    const wrapper = document.getElementById('progress-wrapper');
+    if (wrapper) wrapper.style.display = 'none';
     const sCol = document.getElementById('symbol-col');
     const nCol = document.getElementById('name-col');
     const panel = document.getElementById('game-over-panel');
@@ -169,6 +207,7 @@ function handleCardClick() {
         timerStarted = true;
         gameStartTime = Date.now();
         startTime = Date.now();
+        hamleZamanlayiciBaslat();
         timerInterval = setInterval(() => {
             const timerEl = document.getElementById('live-timer');
             if(timerEl) timerEl.innerText = Math.floor((Date.now() - gameStartTime) / 1000);
@@ -188,19 +227,20 @@ function handleCardClick() {
         const s = selectedSymbol, n = selectedName;
         if (s.dataset.match === n.dataset.match) {
             if (!isMuted) correctSound.play();
-            
-            let hamleSuresi = Math.max(1, Math.floor((Date.now() - startTime) / 1000));
+            let bonusCarpani = Math.max(0.1, kalanHamleSuresi / 10);
+            let temelPuan = 1000;
             let havuzGenisligi = parseInt(document.getElementById('elementRange').value) || 118;
-            puan += Math.floor((1000 / hamleSuresi) * (1 + (havuzGenisligi / 118)));
+            puan += Math.floor(temelPuan * bonusCarpani * (1 + (havuzGenisligi / 118)));
             
             document.getElementById('puan-degeri').innerText = puan;
+            hamleZamanlayiciBaslat();
             s.classList.add('correct-flash'); n.classList.add('correct-flash');
             selectedSymbol = null; selectedName = null;
-            startTime = Date.now();
 
             setTimeout(() => {
                 s.classList.add('hidden'); n.classList.add('hidden');
                 if (document.querySelectorAll('.card:not(.hidden)').length === 0) {
+                  if (hamleInterval) clearInterval(hamleInterval);
                     oyunuBitir();
                 }
             }, 400);
@@ -210,7 +250,8 @@ function handleCardClick() {
             can--;
             document.getElementById('can-degeri').innerText = "❤️".repeat(Math.max(0, can));
             selectedSymbol = null; selectedName = null;
-            if (can <= 0) {
+            if (can <= 0) { 
+            if (hamleInterval) clearInterval(hamleInterval);
                 setTimeout(() => { oyunuBitir(); }, 500);
             } else {
                 setTimeout(() => {

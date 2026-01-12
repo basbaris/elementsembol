@@ -273,7 +273,10 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     const pDisp = document.getElementById("player-name");
     if (pDisp) pDisp.innerText = localStorage.getItem("oyuncuAdi") || "Misafir";
-    initGame();
+}
+ if (document.querySelector('.game-container')) {
+        initGame();
+    }
 });
 
 window.initGame = initGame;

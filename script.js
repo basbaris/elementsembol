@@ -271,10 +271,14 @@ window.addEventListener('DOMContentLoaded', () => {
             mBtn.innerText = isMuted ? "🔇" : "🔊";
         };
     }
+
     const pDisp = document.getElementById("player-name");
-    if (pDisp) pDisp.innerText = localStorage.getItem("oyuncuAdi") || "Misafir";
-}
- if (document.querySelector('.game-container')) {
+    if (pDisp) {
+        pDisp.innerText = localStorage.getItem("oyuncuAdi") || "Misafir";
+    }
+
+    // Sadece game.html sayfasındaysak oyunu başlatır
+    if (document.querySelector('.game-container')) {
         initGame();
     }
 });

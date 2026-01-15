@@ -9,17 +9,18 @@
 </head>
 <body>
     <div class="header">
-        <h1>Element Avcısı</h1>
+        <h1 id="game-main-title">Element Avcısı</h1> 
         
         <div id="user-display" style="font-size: 1.1rem; font-weight: bold; color: #2c3e50; margin-bottom: 10px;">
-            Oyuncu: <span id="player-name" style="color: #3498db;">Misafir</span>
+            <span id="game-player-label">Oyuncu:</span> <span id="player-name" style="color: #3498db;">Misafir</span>
             <div style="margin-top: 5px;">
-                ⏱️ <span id="live-timer">0</span> sn
+                ⏱️ <span id="live-timer-text">0</span> sn
                 <button id="mute-btn" title="Sesi Aç/Kapat" style="background: white; border: 1px solid #ddd; border-radius: 5px; cursor: pointer; padding: 2px 8px; margin-left: 10px;">🔊</button>
             </div>
             <div class="stats" style="margin-top: 10px; padding: 10px; background: rgba(255,255,255,0.8); border-radius: 12px; display: inline-block;">
-                Puan: <b id="puan-degeri" style="color: #27ae60;">0</b> | 
-                Can: <b id="can-degeri">❤️❤️❤️</b>
+                <span id="label-puan">Puan</span>: <b id="puan-degeri" style="color: #27ae60;">0</b> | 
+                <span id="label-can">Can</span>: <b id="can-degeri">❤️❤️❤️</b> | 
+                <span id="label-sure">Süre</span>: <b id="live-timer">0</b>
             </div>
         </div>
 
@@ -32,26 +33,18 @@
 
         <div class="controls-container">
             <div class="control-group">
-                <label>Aralık (1-118):</label>
+                <label id="game-range-label">Aralık (1-118):</label>
                 <input type="number" id="elementRange" value="118" min="1" max="118" onchange="initGame()">
             </div>
+            
             <div class="control-group">
-                <label>Grup Filtresi:</label>
+                <label id="game-group-label">Grup Filtresi:</label>
                 <select id="groupFilter" onchange="initGame()">
-                    <option value="all">Hepsi 🌐</option>
-                    <option value="nonmetal">Ametaller 🟥</option> 
-                    <option value="noble">Soygazlar 🟪</option>
-                    <option value="alkali">Alkali Metaller 🟧</option>
-                    <option value="earth">Toprak Alkali 🟦</option>
-                    <option value="metalloid">Yarı Metaller 🟩</option>
-                    <option value="transition">Geçiş Metalleri 🔘</option>
-                    <option value="post">Zayıf Metaller 🟣</option>
-                    <option value="lanthanide">Lantanitler 🟫</option>
-                    <option value="actinide">Aktinitler 🟢</option>
-                </select>
+                    </select>
             </div>
+
             <div class="control-group">
-                <label>Kart Çifti:</label>
+                <label id="game-pair-label">Kart Çifti:</label>
                 <input type="number" id="elementCount" value="10" min="1" max="50" onchange="initGame()">
             </div>
         </div>
@@ -69,9 +62,8 @@
         <div id="final-score-text" style="font-size: 1.2rem; margin-bottom: 20px; line-height: 1.6;">
             Puan: 0 <br> Süre: 0 sn
         </div>
-        
         <button id="whatsapp-btn" style="background-color: #25D366; color: white; border: none; padding: 15px; border-radius: 30px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; gap: 10px; width: 100%; font-size: 1rem;">
-            <span>Skorunu WhatsApp'ta Paylaş</span> 🚀
+          <span id="wa-btn-text">Skorunu WhatsApp'ta Paylaş</span> 🚀
         </button>
 
         <div id="leaderboard-section">
@@ -84,7 +76,7 @@
         <button onclick="location.reload()" style="margin-top: 20px; background: none; border: 1px solid white; color: white; padding: 8px 15px; border-radius: 20px; cursor: pointer; opacity: 0.7;">Kapat</button>
     </div>
 
-    <button class="reset-btn" onclick="initGame()">Yeniden Başlat / Karıştır</button>
+    <button class="reset-btn" onclick="initGame()" id="reset-btn-text">Yeniden Başlat / Karıştır</button>
 
     <script type="module" src="script.js"></script>
 </body>

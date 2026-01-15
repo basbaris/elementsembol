@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9457945949630736" crossorigin="anonymous"></script>
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>İletişim - Element Avcısı Pro</title>
+    <title id="page-title">İletişim - Element Avcısı Pro</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Bu sayfaya özel eklemeler (Orijinal style.css ile uyumlu) */
         .contact-container {
             display: flex;
             flex-direction: column;
@@ -80,18 +80,51 @@
 
     <div class="contact-container">
         <div class="contact-card">
-            <h1>Bize Ulaşın</h1>
-            <p>Oyunla ilgili görüşleriniz, hata bildirimleriniz veya iş birliği talepleriniz için bize e-posta yoluyla ulaşabilirsiniz.</p>
+            <h1 id="c-header">Bize Ulaşın</h1>
+            <p id="c-desc">Oyunla ilgili görüşleriniz, hata bildirimleriniz veya iş birliği talepleriniz için bize e-posta yoluyla ulaşabilirsiniz.</p>
             
-            <a href="mailto:basbaris043@gmail.com" class="mail-link">
+            <a href="mailto:basbaris043@gmail.com" class="mail-link" id="c-mail-btn">
                 ✉️ E-Posta Gönder
             </a>
 
             <div style="margin-top: 20px;">
-                <a href="index.html" class="back-link">← Ana Sayfaya Dön</a>
+                <a href="index.html" class="back-link" id="c-back">← Ana Sayfaya Dön</a>
             </div>
         </div>
     </div>
 
+    <script>
+        const texts = {
+            tr: {
+                title: "İletişim",
+                desc: "Oyunla ilgili görüşleriniz, hata bildirimleriniz veya iş birliği talepleriniz için bize e-posta yoluyla ulaşabilirsiniz.",
+                mailBtn: "✉️ E-Posta Gönder",
+                back: "← Ana Sayfaya Dön"
+            },
+            en: {
+                title: "Contact Us",
+                desc: "You can contact us via email for your feedback, bug reports, or collaboration requests regarding the game.",
+                mailBtn: "✉️ Send Email",
+                back: "← Back to Home"
+            },
+            de: {
+                title: "Kontakt",
+                desc: "Sie können uns per E-Mail für Ihr Feedback, Fehlermeldungen oder Kooperationsanfragen zum Spiel kontaktieren.",
+                mailBtn: "✉️ E-Mail senden",
+                back: "← Zurück zur Startseite"
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentLang = localStorage.getItem("seciliDil") || "tr";
+            const s = texts[currentLang];
+            
+            document.getElementById('c-header').innerText = s.title;
+            document.getElementById('c-desc').innerText = s.desc;
+            document.getElementById('c-mail-btn').innerText = s.mailBtn;
+            document.getElementById('c-back').innerText = s.back;
+            document.getElementById('page-title').innerText = s.title + " - Element Avcısı Pro";
+        });
+    </script>
 </body>
 </html>

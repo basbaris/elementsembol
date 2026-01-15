@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9457945949630736" crossorigin="anonymous"></script>
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hakkımızda - Element Avcısı Pro</title>
+    <title id="page-title">Hakkımızda - Element Avcısı Pro</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Senin o sevdiğin koyu tema ve cam efektini bu sayfaya da uyguluyoruz */
         .about-container {
             display: flex;
             flex-direction: column;
@@ -31,7 +31,7 @@
             width: 100%;
             max-width: 700px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            text-align: left; /* Okunabilirlik için metni sola yasladık */
+            text-align: left;
         }
 
         h1, h2 {
@@ -69,21 +69,61 @@
 
     <div class="about-container">
         <div class="about-card">
-            <h1>Hakkımızda</h1>
+            <h1 id="a-header">Hakkımızda</h1>
             
-            <p><strong>Element Avcısı Pro</strong>, kimya eğitimini dijital oyunlaştırma ile birleştiren bir öğrenme platformudur.</p>
-            
-            <p>Amacımız, periyodik tablodaki elementleri ve sembollerini ezberlemek yerine, eğlenceli ve rekabetçi bir ortamda kalıcı olarak öğretmektir. Dünya sıralaması özelliğimiz sayesinde kullanıcılar kendilerini geliştirirken diğer oyuncularla yarışma fırsatı bulurlar.</p>
+            <div id="a-content">
+                </div>
 
-            <h2>Vizyonumuz</h2>
-            <p>Eğitici oyunlar aracılığıyla bilimi herkes için daha erişilebilir ve keyifli hale getirmek.</p>
-
-            <h2>İletişim</h2>
-            <p>Proje hakkında geri bildirimleriniz veya iş birliği talepleriniz için bize ulaşmaktan çekinmeyin.</p>
-
-            <a href="index.html" class="back-link">← Ana Sayfaya Dön</a>
+            <a href="index.html" class="back-link" id="a-back">← Ana Sayfaya Dön</a>
         </div>
     </div>
 
+    <script>
+        const texts = {
+            tr: {
+                title: "Hakkımızda",
+                back: "← Ana Sayfaya Dön",
+                content: `
+                    <p><strong>Element Avcısı Pro</strong>, kimya eğitimini dijital oyunlaştırma ile birleştiren bir öğrenme platformudur.</p>
+                    <p>Amacımız, periyodik tablodaki elementleri ve sembollerini ezberlemek yerine, eğlenceli ve rekabetçi bir ortamda kalıcı olarak öğretmektir. Dünya sıralaması özelliğimiz sayesinde kullanıcılar kendilerini geliştirirken diğer oyuncularla yarışma fırsatı bulurlar.</p>
+                    <h2>Vizyonumuz</h2>
+                    <p>Eğitici oyunlar aracılığıyla bilimi herkes için daha erişilebilir ve keyifli hale getirmek.</p>
+                    <h2>İletişim</h2>
+                    <p>Proje hakkında geri bildirimleriniz veya iş birliği talepleriniz için bize ulaşmaktan çekinmeyin.</p>`
+            },
+            en: {
+                title: "About Us",
+                back: "← Back to Home",
+                content: `
+                    <p><strong>Element Hunter Pro</strong> is a learning platform that combines chemistry education with digital gamification.</p>
+                    <p>Our goal is to teach the elements and symbols of the periodic table permanently in a fun and competitive environment. Thanks to our global ranking feature, users can compete with others while improving themselves.</p>
+                    <h2>Our Vision</h2>
+                    <p>To make science more accessible and enjoyable for everyone through educational games.</p>
+                    <h2>Contact</h2>
+                    <p>Feel free to contact us for feedback or collaboration requests regarding the project.</p>`
+            },
+            de: {
+                title: "Über uns",
+                back: "← Zurück zur Startseite",
+                content: `
+                    <p><strong>Element Jäger Pro</strong> ist eine Lernplattform, die Chemie-Ausbildung mit digitaler Gamification verbindet.</p>
+                    <p>Unser Ziel ist es, die Elemente und Symbole des Periodensystems in einer unterhaltsamen und wettbewerbsorientierten Umgebung dauerhaft zu vermitteln. Dank unserer Weltranglisten-Funktion können sich Nutzer mit anderen messen.</p>
+                    <h2>Unsere Vision</h2>
+                    <p>Wissenschaft durch Lernspiele für alle zugänglicher und unterhaltsamer zu machen.</p>
+                    <h2>Kontakt</h2>
+                    <p>Kontaktieren Sie uns gerne für Feedback oder Kooperationsanfragen zum Projekt.</p>`
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentLang = localStorage.getItem("seciliDil") || "tr";
+            const s = texts[currentLang];
+            
+            document.getElementById('a-header').innerText = s.title;
+            document.getElementById('a-back').innerText = s.back;
+            document.getElementById('a-content').innerHTML = s.content;
+            document.title = s.title + " - Element Avcısı Pro";
+        });
+    </script>
 </body>
 </html>

@@ -219,12 +219,18 @@ body:not(:has(.landing-page)) {
     cursor: pointer; 
     font-weight: bold; 
     font-size: 0.85rem; 
-    transition: 0.2s; 
+    transition: transform 0.2s;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
     text-align: center;
     padding: 5px;
     border: 2px solid transparent;
     user-select: none;
+  /* --- EKLENECEK KISIM --- */
+    overflow: hidden;          /* Taşan yazıyı gizler */
+    text-overflow: ellipsis;   /* Çok uzunsa sonuna "..." koyar */
+    white-space: nowrap;       /* Yazının alt satıra geçmesini engeller */
+    /* ----------------------- */
+
 }
 
 .card.selected { border-color: #2c3e50; transform: scale(1.03); box-shadow: 0 0 10px rgba(0,0,0,0.2); }
@@ -243,16 +249,39 @@ body:not(:has(.landing-page)) {
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
-/* Renk Grupları */
-.group-nonmetal { background-color: #f1948a; }
-.group-noble { background-color: #bb8fce; }
-.group-alkali { background-color: #f8c471; }
-.group-earth { background-color: #7fb3d5; }
-.group-metalloid { background-color: #76d7c4; }
-.group-transition { background-color: #95a5a6; }
-.group-post { background-color: #9b59b6; }
-.group-lanthanide { background-color: #edbb99; }
-.group-actinide { background-color: #a9dfbf; }
+/* --- GÜNCELLENMİŞ RENK GRUPLARI (Tam Uyumlu) --- */
+
+/* Ametaller */
+.group-ametal, .group-nonmetal { background-color: #f1948a !important; color: white; }
+
+/* Soygazlar */
+.group-soygaz, .group-noble { background-color: #bb8fce !important; color: white; }
+
+/* Alkali Metaller */
+.group-alkali { background-color: #f8c471 !important; color: #5d4037; }
+
+/* Toprak Alkali Metaller */
+.group-toprak-alkali, .group-earth { background-color: #7fb3d5 !important; color: white; }
+
+/* Yarımetaller */
+.group-yarımetal, .group-metalloid { background-color: #76d7c4 !important; color: #1a5276; }
+
+/* Halojenler */
+.group-halojen, .group-halogen { background-color: #f7dc6f !important; color: #7d6608; }
+
+/* Genel Metaller (Geçiş metalleri ve diğerleri) */
+.group-metal, .group-transition, .group-post { background-color: #95a5a6 !important; color: white; }
+
+/* Lantanit ve Aktinitler */
+.group-lanthanide, .group-actinide { background-color: #edbb99 !important; color: white; }
+
+/* Eğer listede olmayan bir grup gelirse diye varsayılan renk */
+.card {
+    background-color: #34495e; /* Şeffaf kalmaması için koyu gri/mavi taban */
+}
+
+
+
 /* Doğru Eşleşme Efekti */
 .correct-flash {
     animation: success-glow 0.4s ease-out;
@@ -320,3 +349,56 @@ body:not(:has(.landing-page)) {
     transform: scale(1.05);
     transition: 0.3s;
 }
+.language-selector {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.language-selector button {
+    font-size: 24px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.language-selector button:hover {
+    transform: scale(1.2);
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.language-selector button.active {
+    border-color: #00ff88;
+    background: rgba(0, 255, 136, 0.2);
+}
+<style>
+    /* Kontrol gruplarının yan yana düzgün durmasını sağlar */
+    .controls-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .control-group {
+        display: flex;
+        flex-direction: column; /* Etiketi üstte, kutuyu altta tutar */
+        align-items: center;
+        min-width: 80px; /* Kelimeler uzasa da kutu genişliğini korur */
+    }
+
+    .control-group label {
+        font-size: 0.8rem; /* Metni hafif küçülterek sığmasını kolaylaştırır */
+        white-space: nowrap; /* Kelimenin bölünmesini engeller */
+        margin-bottom: 5px;
+    }
+
+    .control-group input, .control-group select {
+        width: 100% !important; /* Kutuların genişliğini eşitler */
+        max-width: 120px;
+    }
+</style>

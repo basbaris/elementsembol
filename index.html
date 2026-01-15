@@ -11,11 +11,11 @@
 </head>
 <body>
     <div class="landing-page">
-        <img src="tablo.png" alt="Periyodik Tablo" class="main-img">
+        <img src="tablo.png" alt="Periyodik Table" class="main-img">
         
         <div class="hero-section">
-            <h1>Element Avcısı Pro</h1>
-            <p>Kimya dünyasını oyunla keşfet!</p>
+            <h1 id="main-title">Element Avcısı Pro</h1>
+            <p id="main-desc">Kimya dünyasını oyunla keşfet!</p>
         </div>
         
         <div class="landing-buttons">
@@ -23,14 +23,20 @@
             <a href="#" class="btn-login" id="loginBtn">İsimle Giriş Yap</a>
         </div>
 
+        <div class="language-selector">
+            <button onclick="setLanguage('tr')">🇹🇷</button>
+            <button onclick="setLanguage('en')">🇺🇸</button>
+            <button onclick="setLanguage('de')">🇩🇪</button>
+        </div>
+
         <div id="leaderboard-container" class="glass-table">
-            <h3>🏆 Dünya Sıralaması (Top 10)</h3>
+            <h3 id="leader-title">🏆 Dünya Sıralaması (Top 10)</h3>
             <table>
                 <thead>
                     <tr>
-                        <th style="width: 20%;">Sıra</th>
-                        <th style="width: 50%;">Oyuncu</th>
-                        <th style="text-align: right; width: 30%;">Puan</th>
+                        <th style="width: 20%;" id="th-rank">Sıra</th>
+                        <th style="width: 50%;" id="th-player">Oyuncu</th>
+                        <th style="text-align: right; width: 30%;" id="th-score">Puan</th>
                     </tr>
                 </thead>
                 <tbody id="leaderboard-body">
@@ -40,6 +46,31 @@
                 </tbody>
             </table>
         </div>
+
+        <section id="hakkinda" style="padding: 20px; color: white; margin-top: 30px;">
+            <h2 id="h-about-title">Element Avcısı Hakkında</h2>
+            <p id="h-about-text">Bu oyun, kimya öğrenen öğrencilerin element sembollerini eğlenceli bir şekilde ezberlemesi için tasarlanmıştır...</p>
+        </section>
+
+        <section id="nasil-oynanir" style="padding: 30px; background: rgba(255,255,255,0.05); border-radius: 15px; margin: 20px 0; color: white;">
+            <h2 style="color: #e67e22; text-align: center;" id="h-how-title">🎮 Nasıl Oynanır?</h2>
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                <p id="how-p1"><strong>3 Can Hakkı:</strong> Toplamda 3 hata yapma hakkın var. Dikkatli ol!</p>
+                <p id="how-p2"><strong>Puanlama:</strong> Her doğru sembol eşleştirmesi seni dünya sıralamasında yukarı taşır.</p>
+                <p id="how-p3"><strong>Oyun Sonu:</strong> Canların tükendiğinde skorun otomatik olarak dünya sıralamasına kaydedilir.</p>
+                <p id="how-p4"><strong>Seçenekler:</strong> Üst panelden element sayısını ve zorluk seviyesini ayarlayabilirsiniz.</p>
+            </div>
+        </section>
+
+        <footer style="margin-top: 50px; padding: 20px; text-align: center; font-size: 0.8rem; opacity: 0.8; color: white;">
+            <div style="margin-bottom: 10px;">
+                <a href="about.html" id="f-about" style="color: white; text-decoration: none; margin-right: 15px;">Hakkımızda</a>
+                <a href="privacy.html" id="f-privacy" style="color: white; text-decoration: none;">Gizlilik Politikası</a>
+                <a href="contact.html" id="f-contact" style="color: white; text-decoration: none; margin-left: 15px;">Bize Ulaşın</a>
+            </div>
+            <p id="f-copy">© 2026 Element Avcısı Pro</p>
+
+        </footer>
     </div>
 
 <script type="module">
@@ -59,106 +90,94 @@
   const app = initializeApp(firebaseConfig);
   const database = getDatabase(app);
 
-  window.addEventListener('DOMContentLoaded', () => {
+  window.setLanguage = function(lang) {
+      localStorage.setItem("seciliDil", lang);
+      
+      const dictionary = {
+          tr: { 
+              title: "Element Avcısı Pro", desc: "Kimya dünyasını oyunla keşfet!", start: "Oyunu Başlat", login: "İsimle Giriş Yap", leader: "🏆 Dünya Sıralaması", rank: "Sıra", player: "Oyuncu", score: "Puan", aboutT: "Element Avcısı Hakkında", aboutP: "Bu oyun, kimya öğrenen öğrencilerin element sembollerini eğlenceli bir şekilde ezberlemesi için tasarlanmıştır...", howT: "🎮 Nasıl Oynanır?", h1: "3 Can Hakkı: 3 hata yapma hakkın var.", h2: "Puanlama: Her doğru eşleşme puan kazandırır.", h3: "Oyun Sonu: Skorun dünya sıralamasına kaydedilir.", h4: "Seçenekler: Üst panelden ayarları yapabilirsiniz.", f1: "Hakkımızda", f2: "Gizlilik Politikası", f3: "Bize Ulaşın", welcome: "Hoş Geldin, ", copy: "© 2026 Element Avcısı Pro"
+          },
+          en: { 
+              title: "Element Hunter Pro", desc: "Discover chemistry through play!", start: "Start Game", login: "Login with Name", leader: "🏆 Global Ranking", rank: "Rank", player: "Player", score: "Score", aboutT: "About Element Hunter", aboutP: "This game is designed for students to learn symbols in a fun way...", howT: "🎮 How to Play?", h1: "3 Lives: You have 3 attempts allowed.", h2: "Scoring: Each match improves your rank.", h3: "Game Over: Score is auto-saved to leaderboard.", h4: "Options: Adjust settings via the top panel.", f1: "About Us", f2: "Privacy Policy", f3: "Contact Us", welcome: "Welcome, ", copy: "© 2026 Element Hunter Pro"
+          },
+          de: { 
+              title: "Element Jäger Pro", desc: "Chemie spielerisch entdecken!", start: "Spiel Starten", login: "Einloggen", leader: "🏆 Weltrangliste", rank: "Rang", player: "Spieler", score: "Punkt", aboutT: "Über Element Jäger", aboutP: "Dieses Spiel hilft Schülern, Symbole spielerisch zu lernen...", howT: "🎮 Wie spielt man?", h1: "3 Leben: Du hast 3 Versuche.", h2: "Punkte: Jedes Match zählt.", h3: "Spielende: Score wird in die Liste eingetragen.", h4: "Optionen: Einstellungen oben anpassen.", f1: "Über uns", f2: "Datenschutz", f3: "Kontakt", welcome: "Willkommen, ", copy: "© 2026 Element Jäger Pro"
+          }
+      };
+
+      const s = dictionary[lang];
+      document.getElementById('main-title').innerText = s.title;
+      document.getElementById('main-desc').innerText = s.desc;
+      document.getElementById('startBtn').innerText = s.start;
+      document.getElementById('leader-title').innerText = s.leader;
+      document.getElementById('th-rank').innerText = s.rank;
+      document.getElementById('th-player').innerText = s.player;
+      document.getElementById('th-score').innerText = s.score;
+      document.getElementById('h-about-title').innerText = s.aboutT;
+      document.getElementById('h-about-text').innerText = s.aboutP;
+      document.getElementById('h-how-title').innerText = s.howT;
+      
+      const updateP = (id, text) => {
+          const parts = text.split(':');
+          document.getElementById(id).innerHTML = `<strong>${parts[0]}:</strong>${parts[1] || ''}`;
+      };
+      updateP('how-p1', s.h1); updateP('how-p2', s.h2); updateP('how-p3', s.h3); updateP('how-p4', s.h4);
+
+      document.getElementById('f-about').innerText = s.f1;
+      document.getElementById('f-privacy').innerText = s.f2;
+      document.getElementById('f-contact').innerText = s.f3;
+      document.getElementById('f-copy').innerText = s.copy;
+
       const savedName = localStorage.getItem("oyuncuAdi");
-      const loginBtn = document.getElementById('loginBtn');
-      if (savedName && loginBtn) {
-          loginBtn.innerText = "Hoş Geldin, " + savedName;
-          loginBtn.style.background = "#27ae60";
+      if (savedName) {
+          document.getElementById('loginBtn').innerText = s.welcome + savedName;
+          document.getElementById('loginBtn').style.background = "#27ae60";
       }
-      skorlariGetir();
-  });
+  };
 
   function skorlariGetir() {
     const skorRef = ref(database, 'skorlar');
     const enIyilerSorgu = query(skorRef, orderByChild('puan'), limitToLast(50));
-
     onValue(enIyilerSorgu, (snapshot) => {
         const tbody = document.getElementById('leaderboard-body');
         if(!tbody) return;
-        
+        tbody.innerHTML = ""; 
         let tumSkorlar = [];
-        snapshot.forEach((child) => {
-            const veri = child.val();
-            if(veri && veri.puan) { tumSkorlar.push(veri); }
-        });
-
+        snapshot.forEach(c => { if(c.val().puan) tumSkorlar.push(c.val()); });
         tumSkorlar.sort((a, b) => b.puan - a.puan);
-
         let finalSkorlar = [];
         let gorulenIsimler = new Set();
-
         for (let skor of tumSkorlar) {
-            let isimKey = (skor.isim || "Misafir").toString().trim().toLowerCase();
-            if (!gorulenIsimler.has(isimKey)) {
-                finalSkorlar.push(skor);
-                gorulenIsimler.add(isimKey);
-            }
+            let isimKey = (skor.isim || "Guest").toString().trim().toLowerCase();
+            if (!gorulenIsimler.has(isimKey)) { finalSkorlar.push(skor); gorulenIsimler.add(isimKey); }
             if (finalSkorlar.length === 10) break;
         }
-
-        tbody.innerHTML = ""; 
-
-        if (finalSkorlar.length === 0) {
-            tbody.innerHTML = "<tr><td colspan='3' style='text-align:center; padding:10px;'>Henüz skor yok!</td></tr>";
-            return;
-        }
-
         finalSkorlar.forEach((skor, index) => {
             const tr = document.createElement('tr');
-            let sira = index + 1;
-            let emoji = (sira === 1) ? "🥇" : (sira === 2) ? "🥈" : (sira === 3) ? "🥉" : sira;
-
-            tr.innerHTML = `
-                <td style="padding:10px; text-align:center;">${emoji}</td>
-                <td style="padding:10px;">${skor.isim || "Misafir"}</td>
-                <td style="padding:10px; text-align: right; font-weight: bold; color: #e67e22;">${skor.puan}</td>
-            `;
+            let emoji = (index === 0) ? "🥇" : (index === 1) ? "🥈" : (index === 2) ? "🥉" : index + 1;
+            tr.innerHTML = `<td style="padding:10px; text-align:center;">${emoji}</td><td>${skor.isim}</td><td style="text-align:right; font-weight:bold; color:#e67e22;">${skor.puan}</td>`;
             tbody.appendChild(tr);
         });
     });
   }
 
+  window.addEventListener('DOMContentLoaded', () => {
+      const currentLang = localStorage.getItem("seciliDil") || "tr";
+      window.setLanguage(currentLang);
+      skorlariGetir();
+  });
+
   document.getElementById('loginBtn').onclick = function(e) {
-      e.preventDefault(); 
-      let userName = prompt("Sıralamada görünmek için ismini gir:");
+      e.preventDefault();
+      const lang = localStorage.getItem("seciliDil") || "tr";
+      const prompts = { tr: "İsminizi girin:", en: "Enter your name:", de: "Name eingeben:" };
+      let userName = prompt(prompts[lang]);
       if (userName && userName.trim() !== "") {
           localStorage.setItem("oyuncuAdi", userName.trim());
-          this.innerText = "Hoş Geldin, " + userName.trim();
-          this.style.background = "#27ae60";
-          window.location.href = "game.html"; 
-      }
-  };
-
-  document.getElementById('startBtn').onclick = function(e) {
-      if(!localStorage.getItem("oyuncuAdi")) {
-          e.preventDefault();
-          alert("Lütfen önce 'İsimle Giriş Yap' butonuna tıklayarak isminizi girin.");
+          window.location.reload();
       }
   };
 </script>
-
-<section id="hakkinda" style="padding: 20px; color: white; margin-top: 30px;">
-    <h2>Element Avcısı Hakkında</h2>
-    <p>Bu oyun, kimya öğrenen öğrencilerin element sembollerini eğlenceli bir şekilde ezberlemesi için tasarlanmıştır...</p>
-</section>
-
-<section id="nasil-oynanir" style="padding: 30px; background: rgba(255,255,255,0.05); border-radius: 15px; margin: 20px 0; color: white;">
-    <h2 style="color: #e67e22; text-align: center;">🎮 Nasıl Oynanır?</h2>
-    <div style="display: flex; flex-direction: column; gap: 15px;">
-        <p><strong>3 Can Hakkı:</strong> Toplamda 3 hata yapma hakkın var. Dikkatli ol!</p>
-        <p><strong>Puanlama:</strong> Her doğru sembol eşleştirmesi seni dünya sıralamasında yukarı taşır.</p>
-        <p><strong>Oyun Sonu:</strong> Canların tükendiğinde skorun otomatik olarak Firebase tabanlı dünya sıralamasına kaydedilir.</p>
-        <p><strong>Butonlar:</strong> Kaç tane element arasından veya hangi grup elementler arasından kaç kartla eşleştirme yapmak istiyorsanız üst panelden seçebilirsiniz.</p>
-    </div>
-</section>
-
-<footer style="margin-top: 50px; padding: 20px; text-align: center; font-size: 0.8rem; opacity: 0.6;">
-    <a href="about.html" style="color: white; text-decoration: none; margin-right: 15px;">Hakkımızda</a>
-    <a href="privacy.html" style="color: white; text-decoration: none;">Gizlilik Politikası</a>
-    <a href="contact.html" style="color: white; text-decoration: none; margin-right: 15px;">Bize Ulaşın</a>
-
-</footer>
 
 </body>
 </html>

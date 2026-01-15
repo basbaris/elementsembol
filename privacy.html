@@ -3,79 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9457945949630736" crossorigin="anonymous"></script>
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gizlilik Politikası - Element Avcısı Pro</title>
+    <title id="title-privacy">Gizlilik Politikası - Element Avcısı Pro</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .privacy-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            min-height: 100vh;
-            padding: 40px 20px;
-            background: radial-gradient(circle, #2c3e50 0%, #000000 100%) no-repeat center center fixed;
-            color: white;
-            box-sizing: border-box;
-        }
-
-        .privacy-card {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            padding: 40px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            width: 100%;
-            max-width: 800px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            line-height: 1.6;
-        }
-
-        h1 { color: #e67e22; text-align: center; }
-        h2 { color: #3498db; margin-top: 30px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; }
-        p { opacity: 0.9; margin-bottom: 15px; font-size: 0.95rem; }
-        
-        .back-link {
-            display: block;
-            text-align: center;
-            margin-bottom: 25px;
-            color: white;
-            text-decoration: none;
-            opacity: 0.7;
-            transition: 0.3s;
-        }
-
-        .back-link:hover { opacity: 1; text-decoration: underline; }
-        a { color: #2ecc71; text-decoration: none; }
-        a:hover { text-decoration: underline; }
+        .content-box { padding: 40px; color: white; max-width: 800px; margin: 100px auto; line-height: 1.8; background: rgba(0, 0, 0, 0.5); border-radius: 15px; }
+        .content-box h1 { color: #e67e22; border-bottom: 2px solid #e67e22; padding-bottom: 10px; font-size: 2rem; }
+        .content-box h3 { color: #f39c12; margin-top: 25px; }
+        .back-btn { display: inline-block; margin-top: 30px; color: #3498db; text-decoration: none; font-weight: bold; transition: color 0.3s; }
+        .back-btn:hover { color: #2980b9; }
+        p { margin-bottom: 15px; opacity: 0.9; }
     </style>
 </head>
 <body>
-
-    <div class="privacy-container">
-        <a href="index.html" class="back-link">← Ana Sayfaya Dön</a>
-        
-        <div class="privacy-card">
-            <h1>Gizlilik Politikası</h1>
-            <p style="text-align: center; opacity: 0.6;">Son Güncelleme: 12 Ocak 2026</p>
-
-            <p><strong>Element Avcısı Pro</strong> olarak gizliliğinize önem veriyoruz. Bu politika, sitemizi kullandığınızda hangi verilerin toplandığını açıklar.</p>
-
-            <h2>1. Toplanan Veriler</h2>
-            <p>Oyunumuzda sadece kullanıcı deneyimini iyileştirmek amacıyla belirlediğiniz takma isim (nickname) ve oyun skorlarınız Firebase (Google) veritabanında saklanır.</p>
-
-            <h2>2. Çerezler ve Reklamlar</h2>
-            <p>Sitemiz, reklamları kişiselleştirmek ve trafik analizi yapmak için Google AdSense ve Google Analytics çerezlerini kullanabilir. Üçüncü taraf satıcı olarak Google, sitemizde reklam yayınlamak için çerezlerden yararlanır.</p>
-            <p>Kullanıcılar, <a href="https://adssettings.google.com" target="_blank">Reklam Ayarları</a> sayfasını ziyaret ederek kişiselleştirilmiş reklamcılığı devre dışı bırakabilirler.</p>
-
-            <h2>3. Üçüncü Taraf Hizmetleri</h2>
-            <p>Sitemiz altyapı olarak Firebase (Google) ve barındırma olarak Netlify/Vercel hizmetlerini kullanmaktadır. Bu platformların kendi gizlilik politikaları geçerlidir.</p>
-
-            <h2>4. İletişim</h2>
-            <p>Gizlilik politikamız hakkında sorularınız için bize ulaşmaktan çekinmeyin.</p>
+    <div class="landing-page">
+        <div class="content-box">
+            <h1 id="p-header">Gizlilik Politikası</h1>
+            <div id="p-body">
+                </div>
+            <a href="index.html" class="back-btn" id="p-back">← Ana Sayfaya Dön</a>
         </div>
     </div>
 
+    <script>
+        const texts = {
+            tr: {
+                header: "Gizlilik Politikası",
+                back: "← Ana Sayfaya Dön",
+                content: `
+                    <p>Bu gizlilik politikası, <strong>Element Avcısı Pro</strong> oyununun kullanıcı verilerini nasıl işlediğini ve koruduğunu açıklar.</p>
+                    <h3>1. Veri Toplama</h3>
+                    <p>Sadece skor tablosunda (Dünya Sıralaması) görünmesi için kendi isteğinizle girdiğiniz kullanıcı adını ve kazandığınız oyun puanlarını sistemimizde tutuyoruz. Başka herhangi bir kişisel veriniz toplanmaz.</p>
+                    <h3>2. Çerezler ve Reklamlar</h3>
+                    <p>Sitemiz, içerik sunmak ve reklamları kişiselleştirmek için Google AdSense reklam sistemini kullanmaktadır. Google, sitemizde reklam yayınlamak için çerezleri kullanabilir.</p>
+                    <h3>3. Üçüncü Taraf Bağlantıları</h3>
+                    <p>Oyunumuz, Google altyapısını (Firebase ve AdSense) kullanarak güvenli bir deneyim sunmayı amaçlar.</p>`
+            },
+            en: {
+                header: "Privacy Policy",
+                back: "← Back to Home",
+                content: `
+                    <p>This privacy policy explains how <strong>Element Hunter Pro</strong> processes and protects user data.</p>
+                    <h3>1. Data Collection</h3>
+                    <p>We only store the username you voluntarily provide for the leaderboard and your game scores. No other personal data is collected.</p>
+                    <h3>2. Cookies and Ads</h3>
+                    <p>Our site uses Google AdSense to serve content and personalize ads. Google may use cookies to serve ads on our site.</p>
+                    <h3>3. Third-Party Links</h3>
+                    <p>Our game aims to provide a secure experience using Google infrastructure (Firebase and AdSense).</p>`
+            },
+            de: {
+                header: "Datenschutz",
+                back: "← Zurück zur Startseite",
+                content: `
+                    <p>Diese Datenschutzerklärung erläutert, wie <strong>Element Jäger Pro</strong> Nutzerdaten verarbeitet und schützt.</p>
+                    <h3>1. Datenerhebung</h3>
+                    <p>Wir speichern nur den von Ihnen freiwillig eingegebenen Benutzernamen für die Rangliste und Ihre Spielergebnisse. Es werden keine weiteren personenbezogenen Daten erhoben.</p>
+                    <h3>2. Cookies und Anzeigen</h3>
+                    <p>Unsere Website verwendet Google AdSense, um Inhalte bereitzustellen und Anzeigen zu personalisieren. Google kann Cookies verwenden, um Anzeigen auf unserer Website zu schalten.</p>
+                    <h3>3. Links von Drittanbietern</h3>
+                    <p>Unser Spiel zielt darauf ab, eine sichere Erfahrung mit der Google-Infrastruktur (Firebase und AdSense) zu bieten.</p>`
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Ana sayfada seçilen dili alıyoruz, yoksa 'tr' varsayılan
+            const currentLang = localStorage.getItem("seciliDil") || "tr";
+            const s = texts[currentLang];
+            
+            document.getElementById('p-header').innerText = s.header;
+            document.getElementById('p-back').innerText = s.back;
+            document.getElementById('p-body').innerHTML = s.content;
+            document.title = s.header + " - Element Avcısı Pro";
+        });
+    </script>
 </body>
 </html>

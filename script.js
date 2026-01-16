@@ -262,7 +262,12 @@ async function oyunuBitir() {
             waBtnText.style.color = "white";
         }
         if(leaderboardTitle) leaderboardTitle.innerText = bm.tablo;
-        if(closeBtn) closeBtn.innerText = bm.kapat;
+          if (closeBtn) {
+          closeBtn.innerText = bm.kapat;
+          closeBtn.onclick = () => {
+            window.location.href = "index.html";
+        };
+    }
         
         scoreText.innerHTML = `${bm.puan}: <b>${finalPuan}</b> <br> ${bm.sure}: <b>${toplamSure}</b> ${bm.sn}`;
     }
@@ -280,7 +285,14 @@ async function oyunuBitir() {
     }
 
     await skoruKaydet(finalPuan);
+    await
     liderlikTablosunuGuncelle();
+// Kullanıcıya skorunu görmesi için 3 saniye süre ver, sonra ana sayfaya (rekorlara) yönlendir
+    setTimeout(() => {
+        if (gameActive === false) { // Eğer hala panel açıksa yönlendir
+            window.location.href = "index.html";
+        }
+    }, 3000); // 3 saniye sonra rekorlar sayfasına döner
 }
 
 function hamleZamanlayiciBaslat() {

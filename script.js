@@ -237,9 +237,9 @@ async function oyunuBitir() {
     
     const currentLang = localStorage.getItem("seciliDil") || "tr";
     const bitisMetinleri = {
-        tr: { bitti: "Oyun Bitti!", puan: "Puan", sure: "Süre", sn: "sn", paylas: "Skorunu WhatsApp'ta Paylaş", tablo: "🏆 Dünya Sıralaması", kapat: "Kapat" },
-        en: { bitti: "Game Over!", puan: "Score", sure: "Time", sn: "sec", paylas: "Share Score on WhatsApp", tablo: "🏆 World Ranking", kapat: "Close" },
-        de: { bitti: "Spiel Vorbei!", puan: "Punkt", sure: "Zeit", sn: "sek", paylas: "Score auf WhatsApp teilen", tablo: "🏆 Weltrangliste", kapat: "Schließen" }
+        tr: { bitti: "Oyun Bitti!", puan: "Puan", sure: "Süre", sn: "sn", paylas: "Skorunu Paylaş", tablo: "🏆 Dünya Sıralaması", kapat: "Kapat", waText: "Arkadaşlarına Meydan Oku!" },
+        en: { bitti: "Game Over!", puan: "Score", sure: "Time", sn: "sec", paylas: "Share Score", tablo: "🏆 World Ranking", kapat: "Close", waText: "Challenge Your Friends!" },
+        de: { bitti: "Spiel Vorbei!", puan: "Punkt", sure: "Zeit", sn: "sek", paylas: "Score Teilen", tablo: "🏆 Weltrangliste", kapat: "Schließen", waText: "Fordere deine Freunde heraus!" }
     };
     const bm = bitisMetinleri[currentLang];
 
@@ -257,42 +257,47 @@ async function oyunuBitir() {
     if (panel && scoreText) {
         panel.style.display = 'block';
         if(panelTitle) panelTitle.innerText = bm.bitti;
+        
+        // WhatsApp Buton Yazısı ve Dil Desteği
         if(waBtnText) {
-            waBtnText.innerText = bm.paylas;
+            waBtnText.innerText = bm.waText; // Burada 3. maddeyi uyguladık
             waBtnText.style.color = "white";
         }
+        
         if(leaderboardTitle) leaderboardTitle.innerText = bm.tablo;
-          if (closeBtn) {
-          closeBtn.innerText = bm.kapat;
-          closeBtn.onclick = () => {
-            window.location.href = "index.html";
-        };
-    }
+        
+        // Kapat Butonunu Ana Sayfaya Yönlendirme (Senin istediğin düzeltme)
+        if (closeBtn) {
+            closeBtn.innerText = bm.kapat;
+            closeBtn.onclick = () => {
+                window.location.href = "index.html";
+            };
+        }
         
         scoreText.innerHTML = `${bm.puan}: <b>${finalPuan}</b> <br> ${bm.sure}: <b>${toplamSure}</b> ${bm.sn}`;
     }
 
+    // Oyun Sonu WhatsApp Paylaşım Linki
     if (waBtn) {
         waBtn.onclick = () => {
             const mesajlar = {
-                tr: `Element Avcısı Pro'da ${finalPuan} puan topladım! 🚀 https://elementsembol.vercel.app`,
-                en: `I scored ${finalPuan} points in Element Hunter Pro! 🚀 https://elementsembol.vercel.app`,
-                de: `Ich habe ${finalPuan} Punkte in Element Jäger Pro erzielt! 🚀 https://elementsembol.vercel.app`
+                tr: `Element Avcısı Pro'da ${finalPuan} puan topladım! 🧪 Sen kaç yapabilirsin? 🚀 https://elementsembol.vercel.app`,
+                en: `I scored ${finalPuan} points in Element Hunter Pro! 🧪 Can you beat me? 🚀 https://elementsembol.vercel.app`,
+                de: `Ich habe ${finalPuan} Punkte in Element Jäger Pro erzielt! 🧪 Schaffst du mehr? 🚀 https://elementsembol.vercel.app`
             };
-            const seciliMesaj = mesajlar[currentLang] || mesajlar.tr;
-            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(seciliMesaj)}`, '_blank');
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(mesajlar[currentLang])}`, '_blank');
         };
     }
 
     await skoruKaydet(finalPuan);
-    await
-    liderlikTablosunuGuncelle();
-// Kullanıcıya skorunu görmesi için 3 saniye süre ver, sonra ana sayfaya (rekorlara) yönlendir
+    await liderlikTablosunuGuncelle();
+
+    // Otomatik yönlendirme (3 saniye sonra rekorlar sayfasına atar)
     setTimeout(() => {
-        if (gameActive === false) { // Eğer hala panel açıksa yönlendir
+        if (document.getElementById('game-over-panel').style.display === 'block') {
             window.location.href = "index.html";
         }
-    }, 3000); // 3 saniye sonra rekorlar sayfasına döner
+    }, 5000); 
 }
 
 function hamleZamanlayiciBaslat() {
@@ -481,6 +486,20 @@ window.addEventListener('DOMContentLoaded', () => {
 
     if (document.querySelector('.game-container')) initGame();
 });
+
+    // WhatsApp Paylaşım Fonksiyonu
+    const waBtn = document.getElementById('main-wa-share');
+    if (waBtn) {
+        waBtn.onclick = function() {
+            const lang = localStorage.getItem("seciliDil") || "tr";
+            const messages = {
+                tr: "Element Avcısı'nda kimya rekorlarını altüst ediyorum! 🧪 Sen kaç puan yapabilirsin? Hemen dene: https://elementsembol.vercel.app",
+                en: "I'm breaking chemistry records in Element Hunter Pro! 🧪 Can you beat my score? Try now: https://elementsembol.vercel.app",
+                de: "Ich breche Chemie-Rekorde in Element Jäger Pro! 🧪 Kannst du meine Punktzahl schlagen? Jetzt probieren: https://elementsembol.vercel.app"
+            };
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(messages[lang])}`, '_blank');
+        };
+    }
 
 function setLanguage(lang) {
     localStorage.setItem("seciliDil", lang);

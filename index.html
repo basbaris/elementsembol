@@ -53,12 +53,12 @@
                 </tbody>
             </table>
         </div>
-        <div style="text-align: center; margin: 25px 0;">
-          <button id="main-wa-share" style="background: linear-gradient(135deg, #25D366, #128C7E); color: white; border: none; padding: 14px 28px; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 16px; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); transition: transform 0.2s;">
-          <span style="font-size: 22px;">📱</span> <span id="wa-share-text">Arkadaşlarına Meydan Oku!</span>
-           </button>
-        </div>
 
+        <div style="text-align: center; margin: 25px 0;">
+            <button id="main-wa-share" style="background: linear-gradient(135deg, #25D366, #128C7E); color: white; border: none; padding: 14px 28px; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 16px; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); transition: transform 0.2s;">
+                <span style="font-size: 22px;">📱</span> <span id="wa-share-text">Arkadaşlarına Meydan Oku!</span>
+            </button>
+        </div>
 
         <section id="hakkinda" style="padding: 20px; color: white; margin-top: 30px;">
             <h2 id="h-about-title">Element Avcısı Hakkında</h2>
@@ -102,12 +102,25 @@
   const app = initializeApp(firebaseConfig);
   const database = getDatabase(app);
 
+  // WhatsApp Paylaşım Fonksiyonu (Global)
+  window.whatsappPaylas = function() {
+    const lang = localStorage.getItem("seciliDil") || "tr";
+    const messages = {
+        tr: "Element Avcısı Pro'da rekorları altüst ediyorum! 🧪 Sen kaç puan yapabilirsin? Hemen dene: https://elementsembol.vercel.app",
+        en: "I'm breaking records in Element Hunter Pro! 🧪 Can you beat my score? Try now: https://elementsembol.vercel.app",
+        de: "Ich breche Rekorde in Element Jäger Pro! 🧪 Kannst du meine Punktzahl schlagen? Jetzt probieren: https://elementsembol.vercel.app"
+    };
+    const text = messages[lang] || messages.tr;
+    const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+    window.open(waUrl, '_blank');
+  };
+
 window.setLanguage = function(lang) {
     localStorage.setItem("seciliDil", lang);
     const dictionary = {
-        tr: { hard: "ZOR MOD: Tek Renk + 2X PUAN! ⚡", title: "Element Avcısı Pro", desc: "Kimya dünyasını oyunla keşfet!", start: "Oyunu Başlat", login: "İsimle Giriş Yap", guest: "Misafir", welcome: "Hoş Geldin, ", leader: "🏆 Dünya Sıralaması", rank: "Sıra", player: "Oyuncu", score: "Puan", aboutT: "Element Avcısı Hakkında", aboutP: "Bu oyun, kimya öğrenen öğrencilerin element sembollerini eğlenceli bir şekilde ezberlemesi için tasarlanmıştır...", howT: "🎮 Nasıl Oynanır?", h1: "3 Can Hakkı: 3 hata yapma hakkın var.", h2: "Puanlama: Her doğru eşleşme puan kazandırır.", h3: "Oyun Sonu: Skorun dünya sıralamasına kaydedilir.", h4: "Seçenekler: Üst panelden ayarları yapabilirsiniz.", f1: "Hakkımızda", f2: "Gizlilik Politikası", f3: "Bize Ulaşın", copy: "© 2026 Element Avcısı Pro" },
-        en: { hard: "HARD MODE: Single Color + 2X SCORE! ⚡", title: "Element Hunter Pro", desc: "Discover chemistry through play!", start: "Start Game", login: "Login with Name", guest: "Guest", welcome: "Welcome, ", leader: "🏆 Global Ranking", rank: "Rank", player: "Player", score: "Score", aboutT: "About Element Hunter", aboutP: "This game is designed for students to learn symbols in a fun way...", howT: "🎮 How to Play?", h1: "3 Lives: You have 3 attempts allowed.", h2: "Scoring: Each match improves your rank.", h3: "Game Over: Score is auto-saved to leaderboard.", h4: "Options: Adjust settings via the top panel.", f1: "About Us", f2: "Privacy Policy", f3: "Contact Us", copy: "© 2026 Element Hunter Pro" },
-        de: { hard: "HARD-MODUS: Einzelfarbe + 2X PUNKTE! ⚡", title: "Element Jäger Pro", desc: "Chemie spielerisch entdecken!", start: "Spiel Starten", login: "Einloggen", guest: "Gast", welcome: "Willkommen, ", leader: "🏆 Weltrangliste", rank: "Rang", player: "Spieler", score: "Punkt", aboutT: "Über Element Jäger", aboutP: "Dieses Spiel hilft Schülern, Symbole spielerisch zu lernen...", howT: "🎮 Wie spielt man?", h1: "3 Leben: Du hast 3 Versuche.", h2: "Punkte: Jedes Match zählt.", h3: "Spielende: Score wird in die Liste eingetragen.", h4: "Optionen: Einstellungen oben anpassen.", f1: "Über uns", f2: "Datenschutz", f3: "Kontakt", copy: "© 2026 Element Jäger Pro" }
+        tr: { hard: "ZOR MOD: Tek Renk + 2X PUAN! ⚡", title: "Element Avcısı Pro", desc: "Kimya dünyasını oyunla keşfet!", start: "Oyunu Başlat", login: "İsimle Giriş Yap", guest: "Misafir", welcome: "Hoş Geldin, ", leader: "🏆 Dünya Sıralaması", rank: "Sıra", player: "Oyuncu", score: "Puan", aboutT: "Element Avcısı Hakkında", aboutP: "Bu oyun, kimya öğrenen öğrencilerin element sembollerini eğlenceli bir şekilde ezberlemesi için tasarlanmıştır...", howT: "🎮 Nasıl Oynanır?", h1: "3 Can Hakkı: 3 hata yapma hakkın var.", h2: "Puanlama: Her doğru eşleşme puan kazandırır.", h3: "Oyun Sonu: Skorun dünya sıralamasına kaydedilir.", h4: "Seçenekler: Üst panelden ayarları yapabilirsiniz.", f1: "Hakkımızda", f2: "Gizlilik Politikası", f3: "Bize Ulaşın", copy: "© 2026 Element Avcısı Pro", waText: "Arkadaşlarına Meydan Oku!"  },
+        en: { hard: "HARD MODE: Single Color + 2X SCORE! ⚡", title: "Element Hunter Pro", desc: "Discover chemistry through play!", start: "Start Game", login: "Login with Name", guest: "Guest", welcome: "Welcome, ", leader: "🏆 Global Ranking", rank: "Rank", player: "Player", score: "Score", aboutT: "About Element Hunter", aboutP: "This game is designed for students to learn symbols in a fun way...", howT: "🎮 How to Play?", h1: "3 Lives: You have 3 attempts allowed.", h2: "Scoring: Each match improves your rank.", h3: "Game Over: Score is auto-saved to leaderboard.", h4: "Options: Adjust settings via the top panel.", f1: "About Us", f2: "Privacy Policy", f3: "Contact Us", copy: "© 2026 Element Hunter Pro", waText: "Challenge Your Friends!" },
+        de: { hard: "HARD-MODUS: Einzelfarbe + 2X PUNKTE! ⚡", title: "Element Jäger Pro", desc: "Chemie spielerisch entdecken!", start: "Spiel Starten", login: "Einloggen", guest: "Gast", welcome: "Willkommen, ", leader: "🏆 Weltrangliste", rank: "Rang", player: "Spieler", score: "Punkt", aboutT: "Über Element Jäger", aboutP: "Dieses Spiel hilft Schülern, Symbole spielerisch zu lernen...", howT: "🎮 Wie spielt man?", h1: "3 Leben: Du hast 3 Versuche.", h2: "Punkte: Jedes Match zählt.", h3: "Spielende: Score wird in die Liste eingetragen.", h4: "Optionen: Einstellungen oben anpassen.", f1: "Über uns", f2: "Datenschutz", f3: "Kontakt", copy: "© 2026 Element Jäger Pro", waText: "Fordere deine Freunde heraus!" }
     };
 
     const s = dictionary[lang];
@@ -124,6 +137,7 @@ window.setLanguage = function(lang) {
     if(document.getElementById('h-about-title')) document.getElementById('h-about-title').innerText = s.aboutT;
     if(document.getElementById('h-about-text')) document.getElementById('h-about-text').innerText = s.aboutP;
     if(document.getElementById('h-how-title')) document.getElementById('h-how-title').innerText = s.howT;
+    if(document.getElementById('wa-share-text')) document.getElementById('wa-share-text').innerText = s.waText;
 
     const loginBtn = document.getElementById('loginBtn');
     if (loginBtn) {
@@ -174,29 +188,28 @@ window.setLanguage = function(lang) {
             tr.innerHTML = `<td style="padding:10px; text-align:center;">${emoji}</td><td>${skor.isim}</td><td style="text-align:right; font-weight:bold; color:#e67e22;">${skor.puan}</td>`;
             tbody.appendChild(tr);
         });
-    }, { onlyOnce: false }); // Sürekli dinleme döngüsünü engellemek için bazen onlyOnce kullanılabilir ama sıralama için kalsın.
+    }, { onlyOnce: false });
   }
 
 window.addEventListener('DOMContentLoaded', () => {
     const currentLang = localStorage.getItem("seciliDil") || "tr";
     const hardModeToggle = document.getElementById('hard-mode-toggle');
+    const waBtn = document.getElementById('main-wa-share');
     
-    // Zor mod kutusunu hafızadaki duruma göre işaretle
+    if (waBtn) {
+        waBtn.onclick = window.whatsappPaylas;
+    }
+
     if (hardModeToggle) {
-        // Hafızada 'true' kayıtlıysa kutuyu işaretli göster
         hardModeToggle.checked = localStorage.getItem('zorModSecimi') === 'true';
-        
-        // Kutuya her tıklandığında hafızayı güncelle
         hardModeToggle.onchange = function() {
             localStorage.setItem('zorModSecimi', this.checked);
         };
     }
 
-    // Dili ve skorları yükle
     window.setLanguage(currentLang);
     skorlariGetir();
 });
-
 
 document.getElementById('loginBtn').onclick = function(e) {
     e.preventDefault();
@@ -206,7 +219,6 @@ document.getElementById('loginBtn').onclick = function(e) {
     
     if (userName && userName.trim() !== "") {
         localStorage.setItem("oyuncuAdi", userName.trim());
-        // Sayfayı yenilemek yerine sadece dili tekrar çağırıyoruz
         window.setLanguage(lang);
     }
 };

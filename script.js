@@ -508,8 +508,22 @@ function setLanguage(lang) {
         const bayrak = (lang === 'tr' ? '🇹🇷' : lang === 'en' ? '🇺🇸' : '🇩🇪');
         if (btn.innerText.includes(bayrak)) btn.classList.add('active');
     });
-    // Sayfayı yenilemek en güvenli dil geçişidir
-    window.location.reload();
+// script.js içindeki setLanguage fonksiyonunu şu şekilde güncelle:
+function setLanguage(lang) {
+    localStorage.setItem("seciliDil", lang);
+    
+    // Sayfayı yenilemek yerine, index.html'deki setLanguage'i çağır
+    if (typeof window.setLanguage === 'function') {
+        window.setLanguage(lang);
+    }
+
+    document.querySelectorAll('.language-selector button').forEach(btn => {
+        btn.classList.remove('active');
+        const bayrak = (lang === 'tr' ? '🇹🇷' : lang === 'en' ? '🇺🇸' : '🇩🇪');
+        if (btn.innerText.includes(bayrak)) btn.classList.add('active');
+    });
+}
+
 }
 
 window.setLanguage = setLanguage;

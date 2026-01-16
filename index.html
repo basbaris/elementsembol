@@ -7,7 +7,7 @@
     <title>Element Avcısı Pro - Kimya Sembol Eşleştirme Oyunu</title>
     <meta name="description" content="Periyodik tablo elementlerini eğlenerek öğrenin. En yüksek puanı toplayın ve dünya sıralamasına girin!">
     <meta name="keywords" content="kimya oyunu, elementler, sembol eşleştirme, periyodik tablo, eğitici oyun">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=1">
 </head>
 <body>
     <div class="landing-page">
@@ -18,6 +18,13 @@
             <p id="main-desc">Kimya dünyasını oyunla keşfet!</p>
         </div>
         
+        <div class="difficulty-settings" style="margin: 20px 0; color: white; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px;">
+          <label style="cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 1.1rem;">
+          <input type="checkbox" id="hard-mode-toggle" style="width: 22px; height: 22px; cursor: pointer;">
+            <span id="hard-mode-text" style="color: white; font-weight: bold; font-size: 18px;">ZOR MOD: Tek Renk + 2X PUAN! ⚡</span>
+          </label>
+        </div>
+
         <div class="landing-buttons">
             <a href="game.html" class="btn-start" id="startBtn">Oyunu Başlat</a>
             <a href="#" class="btn-login" id="loginBtn">İsimle Giriş Yap</a>
@@ -55,10 +62,10 @@
         <section id="nasil-oynanir" style="padding: 30px; background: rgba(255,255,255,0.05); border-radius: 15px; margin: 20px 0; color: white;">
             <h2 style="color: #e67e22; text-align: center;" id="h-how-title">🎮 Nasıl Oynanır?</h2>
             <div style="display: flex; flex-direction: column; gap: 15px;">
-                <p id="how-p1"><strong>3 Can Hakkı:</strong> Toplamda 3 hata yapma hakkın var. Dikkatli ol!</p>
-                <p id="how-p2"><strong>Puanlama:</strong> Her doğru sembol eşleştirmesi seni dünya sıralamasında yukarı taşır.</p>
-                <p id="how-p3"><strong>Oyun Sonu:</strong> Canların tükendiğinde skorun otomatik olarak dünya sıralamasına kaydedilir.</p>
-                <p id="how-p4"><strong>Seçenekler:</strong> Üst panelden element sayısını ve zorluk seviyesini ayarlayabilirsiniz.</p>
+                <p id="how-p1"><strong>3 Can Hakkı:</strong> Toplamda 3 hata yapma hakkın var.</p>
+                <p id="how-p2"><strong>Puanlama:</strong> Her doğru eşleşme seni dünya sıralamasına taşır.</p>
+                <p id="how-p3"><strong>Oyun Sonu:</strong> Canlar bittiğinde skorun kaydedilir.</p>
+                <p id="how-p4"><strong>Seçenekler:</strong> Ayarları üst panelden yapabilirsiniz.</p>
             </div>
         </section>
 
@@ -69,7 +76,6 @@
                 <a href="contact.html" id="f-contact" style="color: white; text-decoration: none; margin-left: 15px;">Bize Ulaşın</a>
             </div>
             <p id="f-copy">© 2026 Element Avcısı Pro</p>
-
         </footer>
     </div>
 
@@ -90,50 +96,54 @@
   const app = initializeApp(firebaseConfig);
   const database = getDatabase(app);
 
-  window.setLanguage = function(lang) {
-      localStorage.setItem("seciliDil", lang);
-      
-      const dictionary = {
-          tr: { 
-              title: "Element Avcısı Pro", desc: "Kimya dünyasını oyunla keşfet!", start: "Oyunu Başlat", login: "İsimle Giriş Yap", leader: "🏆 Dünya Sıralaması", rank: "Sıra", player: "Oyuncu", score: "Puan", aboutT: "Element Avcısı Hakkında", aboutP: "Bu oyun, kimya öğrenen öğrencilerin element sembollerini eğlenceli bir şekilde ezberlemesi için tasarlanmıştır...", howT: "🎮 Nasıl Oynanır?", h1: "3 Can Hakkı: 3 hata yapma hakkın var.", h2: "Puanlama: Her doğru eşleşme puan kazandırır.", h3: "Oyun Sonu: Skorun dünya sıralamasına kaydedilir.", h4: "Seçenekler: Üst panelden ayarları yapabilirsiniz.", f1: "Hakkımızda", f2: "Gizlilik Politikası", f3: "Bize Ulaşın", welcome: "Hoş Geldin, ", copy: "© 2026 Element Avcısı Pro"
-          },
-          en: { 
-              title: "Element Hunter Pro", desc: "Discover chemistry through play!", start: "Start Game", login: "Login with Name", leader: "🏆 Global Ranking", rank: "Rank", player: "Player", score: "Score", aboutT: "About Element Hunter", aboutP: "This game is designed for students to learn symbols in a fun way...", howT: "🎮 How to Play?", h1: "3 Lives: You have 3 attempts allowed.", h2: "Scoring: Each match improves your rank.", h3: "Game Over: Score is auto-saved to leaderboard.", h4: "Options: Adjust settings via the top panel.", f1: "About Us", f2: "Privacy Policy", f3: "Contact Us", welcome: "Welcome, ", copy: "© 2026 Element Hunter Pro"
-          },
-          de: { 
-              title: "Element Jäger Pro", desc: "Chemie spielerisch entdecken!", start: "Spiel Starten", login: "Einloggen", leader: "🏆 Weltrangliste", rank: "Rang", player: "Spieler", score: "Punkt", aboutT: "Über Element Jäger", aboutP: "Dieses Spiel hilft Schülern, Symbole spielerisch zu lernen...", howT: "🎮 Wie spielt man?", h1: "3 Leben: Du hast 3 Versuche.", h2: "Punkte: Jedes Match zählt.", h3: "Spielende: Score wird in die Liste eingetragen.", h4: "Optionen: Einstellungen oben anpassen.", f1: "Über uns", f2: "Datenschutz", f3: "Kontakt", welcome: "Willkommen, ", copy: "© 2026 Element Jäger Pro"
-          }
-      };
+window.setLanguage = function(lang) {
+    localStorage.setItem("seciliDil", lang);
+    const dictionary = {
+        tr: { hard: "ZOR MOD: Tek Renk + 2X PUAN! ⚡", title: "Element Avcısı Pro", desc: "Kimya dünyasını oyunla keşfet!", start: "Oyunu Başlat", login: "İsimle Giriş Yap", guest: "Misafir", welcome: "Hoş Geldin, ", leader: "🏆 Dünya Sıralaması", rank: "Sıra", player: "Oyuncu", score: "Puan", aboutT: "Element Avcısı Hakkında", aboutP: "Bu oyun, kimya öğrenen öğrencilerin element sembollerini eğlenceli bir şekilde ezberlemesi için tasarlanmıştır...", howT: "🎮 Nasıl Oynanır?", h1: "3 Can Hakkı: 3 hata yapma hakkın var.", h2: "Puanlama: Her doğru eşleşme puan kazandırır.", h3: "Oyun Sonu: Skorun dünya sıralamasına kaydedilir.", h4: "Seçenekler: Üst panelden ayarları yapabilirsiniz.", f1: "Hakkımızda", f2: "Gizlilik Politikası", f3: "Bize Ulaşın", copy: "© 2026 Element Avcısı Pro" },
+        en: { hard: "HARD MODE: Single Color + 2X SCORE! ⚡", title: "Element Hunter Pro", desc: "Discover chemistry through play!", start: "Start Game", login: "Login with Name", guest: "Guest", welcome: "Welcome, ", leader: "🏆 Global Ranking", rank: "Rank", player: "Player", score: "Score", aboutT: "About Element Hunter", aboutP: "This game is designed for students to learn symbols in a fun way...", howT: "🎮 How to Play?", h1: "3 Lives: You have 3 attempts allowed.", h2: "Scoring: Each match improves your rank.", h3: "Game Over: Score is auto-saved to leaderboard.", h4: "Options: Adjust settings via the top panel.", f1: "About Us", f2: "Privacy Policy", f3: "Contact Us", copy: "© 2026 Element Hunter Pro" },
+        de: { hard: "HARD-MODUS: Einzelfarbe + 2X PUNKTE! ⚡", title: "Element Jäger Pro", desc: "Chemie spielerisch entdecken!", start: "Spiel Starten", login: "Einloggen", guest: "Gast", welcome: "Willkommen, ", leader: "🏆 Weltrangliste", rank: "Rang", player: "Spieler", score: "Punkt", aboutT: "Über Element Jäger", aboutP: "Dieses Spiel hilft Schülern, Symbole spielerisch zu lernen...", howT: "🎮 Wie spielt man?", h1: "3 Leben: Du hast 3 Versuche.", h2: "Punkte: Jedes Match zählt.", h3: "Spielende: Score wird in die Liste eingetragen.", h4: "Optionen: Einstellungen oben anpassen.", f1: "Über uns", f2: "Datenschutz", f3: "Kontakt", copy: "© 2026 Element Jäger Pro" }
+    };
 
-      const s = dictionary[lang];
-      document.getElementById('main-title').innerText = s.title;
-      document.getElementById('main-desc').innerText = s.desc;
-      document.getElementById('startBtn').innerText = s.start;
-      document.getElementById('leader-title').innerText = s.leader;
-      document.getElementById('th-rank').innerText = s.rank;
-      document.getElementById('th-player').innerText = s.player;
-      document.getElementById('th-score').innerText = s.score;
-      document.getElementById('h-about-title').innerText = s.aboutT;
-      document.getElementById('h-about-text').innerText = s.aboutP;
-      document.getElementById('h-how-title').innerText = s.howT;
-      
-      const updateP = (id, text) => {
-          const parts = text.split(':');
-          document.getElementById(id).innerHTML = `<strong>${parts[0]}:</strong>${parts[1] || ''}`;
-      };
-      updateP('how-p1', s.h1); updateP('how-p2', s.h2); updateP('how-p3', s.h3); updateP('how-p4', s.h4);
+    const s = dictionary[lang];
+    const savedName = localStorage.getItem("oyuncuAdi");
 
-      document.getElementById('f-about').innerText = s.f1;
-      document.getElementById('f-privacy').innerText = s.f2;
-      document.getElementById('f-contact').innerText = s.f3;
-      document.getElementById('f-copy').innerText = s.copy;
+    if(document.getElementById('hard-mode-text')) document.getElementById('hard-mode-text').innerText = s.hard;
+    if(document.getElementById('main-title')) document.getElementById('main-title').innerText = s.title;
+    if(document.getElementById('main-desc')) document.getElementById('main-desc').innerText = s.desc;
+    if(document.getElementById('startBtn')) document.getElementById('startBtn').innerText = s.start;
+    if(document.getElementById('leader-title')) document.getElementById('leader-title').innerText = s.leader;
+    if(document.getElementById('th-rank')) document.getElementById('th-rank').innerText = s.rank;
+    if(document.getElementById('th-player')) document.getElementById('th-player').innerText = s.player;
+    if(document.getElementById('th-score')) document.getElementById('th-score').innerText = s.score;
+    if(document.getElementById('h-about-title')) document.getElementById('h-about-title').innerText = s.aboutT;
+    if(document.getElementById('h-about-text')) document.getElementById('h-about-text').innerText = s.aboutP;
+    if(document.getElementById('h-how-title')) document.getElementById('h-how-title').innerText = s.howT;
 
-      const savedName = localStorage.getItem("oyuncuAdi");
-      if (savedName) {
-          document.getElementById('loginBtn').innerText = s.welcome + savedName;
-          document.getElementById('loginBtn').style.background = "#27ae60";
-      }
-  };
+    const loginBtn = document.getElementById('loginBtn');
+    if (loginBtn) {
+        if (savedName) {
+            loginBtn.innerText = s.welcome + savedName;
+            loginBtn.style.background = "#27ae60";
+        } else {
+            loginBtn.innerText = s.login;
+            loginBtn.style.background = ""; 
+        }
+    }
+
+    const updateP = (id, text) => {
+        const el = document.getElementById(id);
+        if(el) {
+            const parts = text.split(':');
+            el.innerHTML = `<strong>${parts[0]}:</strong>${parts[1] || ''}`;
+        }
+    };
+    updateP('how-p1', s.h1); updateP('how-p2', s.h2); updateP('how-p3', s.h3); updateP('how-p4', s.h4);
+
+    if(document.getElementById('f-about')) document.getElementById('f-about').innerText = s.f1;
+    if(document.getElementById('f-privacy')) document.getElementById('f-privacy').innerText = s.f2;
+    if(document.getElementById('f-contact')) document.getElementById('f-contact').innerText = s.f3;
+    if(document.getElementById('f-copy')) document.getElementById('f-copy').innerText = s.copy;
+};
 
   function skorlariGetir() {
     const skorRef = ref(database, 'skorlar');
@@ -158,25 +168,42 @@
             tr.innerHTML = `<td style="padding:10px; text-align:center;">${emoji}</td><td>${skor.isim}</td><td style="text-align:right; font-weight:bold; color:#e67e22;">${skor.puan}</td>`;
             tbody.appendChild(tr);
         });
-    });
+    }, { onlyOnce: false }); // Sürekli dinleme döngüsünü engellemek için bazen onlyOnce kullanılabilir ama sıralama için kalsın.
   }
 
-  window.addEventListener('DOMContentLoaded', () => {
-      const currentLang = localStorage.getItem("seciliDil") || "tr";
-      window.setLanguage(currentLang);
-      skorlariGetir();
-  });
+window.addEventListener('DOMContentLoaded', () => {
+    const currentLang = localStorage.getItem("seciliDil") || "tr";
+    const hardModeToggle = document.getElementById('hard-mode-toggle');
+    
+    // Zor mod kutusunu hafızadaki duruma göre işaretle
+    if (hardModeToggle) {
+        // Hafızada 'true' kayıtlıysa kutuyu işaretli göster
+        hardModeToggle.checked = localStorage.getItem('zorModSecimi') === 'true';
+        
+        // Kutuya her tıklandığında hafızayı güncelle
+        hardModeToggle.onchange = function() {
+            localStorage.setItem('zorModSecimi', this.checked);
+        };
+    }
 
-  document.getElementById('loginBtn').onclick = function(e) {
-      e.preventDefault();
-      const lang = localStorage.getItem("seciliDil") || "tr";
-      const prompts = { tr: "İsminizi girin:", en: "Enter your name:", de: "Name eingeben:" };
-      let userName = prompt(prompts[lang]);
-      if (userName && userName.trim() !== "") {
-          localStorage.setItem("oyuncuAdi", userName.trim());
-          window.location.reload();
-      }
-  };
+    // Dili ve skorları yükle
+    window.setLanguage(currentLang);
+    skorlariGetir();
+});
+
+
+document.getElementById('loginBtn').onclick = function(e) {
+    e.preventDefault();
+    const lang = localStorage.getItem("seciliDil") || "tr";
+    const prompts = { tr: "İsminizi girin:", en: "Enter your name:", de: "Name eingeben:" };
+    let userName = prompt(prompts[lang]);
+    
+    if (userName && userName.trim() !== "") {
+        localStorage.setItem("oyuncuAdi", userName.trim());
+        // Sayfayı yenilemek yerine sadece dili tekrar çağırıyoruz
+        window.setLanguage(lang);
+    }
+};
 </script>
 
 </body>

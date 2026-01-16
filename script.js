@@ -1,32 +1,29 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
 import { getDatabase, ref, push, get, query, orderByChild, limitToLast, runTransaction } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
-// --- DİL SİSTEMİ (YENİ EKLENEN KISIM) ---
+// --- DİL SİSTEMİ ---
 const gameLang = localStorage.getItem("seciliDil") || "tr";
 const gameDict = {
-    tr: { p: "Oyuncu", r: "Aralık", g: "Grup Filtresi", c: "Kart Çifti", reset: "Yeniden Başlat / Karıştır" },
-    en: { p: "Player", r: "Range", g: "Group Filter", c: "Card Pairs", reset: "Restart / Shuffle" },
-    de: { p: "Spieler", r: "Bereich", g: "Gruppenfilter", c: "Kartendeck", reset: "Neustart / Mischen" }
+    tr: { p: "Oyuncu", r: "Aralık", g: "Grup Filtresi", c: "Kart Cifti", reset: "Yeniden Başlat / Karıştır", guest: "Misafir" },
+    en: { p: "Player", r: "Range", g: "Group Filter", c: "Card Pairs", reset: "Restart / Shuffle", guest: "Guest" },
+    de: { p: "Spieler", r: "Bereich", g: "Gruppenfilter", c: "Kartendeck", reset: "Neustart / Mischen", guest: "Gast" }
 };
 
 document.addEventListener('DOMContentLoaded', () => {
     const g = gameDict[gameLang];
 
-    // 1. ANA BAŞLIĞI GÜNCELLE (Element Avcısı yazısı için)
     const mainTitle = document.getElementById('game-main-title');
     if(mainTitle) {
         const titles = { tr: "Element Avcısı", en: "Element Hunter", de: "Element Jäger" };
         mainTitle.innerText = titles[gameLang];
     }
 
-    // 2. ETİKETLERİ GÜNCELLE
     if(document.getElementById('game-player-label')) document.getElementById('game-player-label').innerText = g.p + ":";
     if(document.getElementById('game-range-label')) document.getElementById('game-range-label').innerText = g.r + ":";
     if(document.getElementById('game-group-label')) document.getElementById('game-group-label').innerText = g.g + ":";
     if(document.getElementById('game-pair-label')) document.getElementById('game-pair-label').innerText = g.c + ":";
     if(document.getElementById('reset-btn-text')) document.getElementById('reset-btn-text').innerText = g.reset;
 
-    // 3. GRUP FİLTRESİ SEÇENEKLERİNİ GÜNCELLE (Element Cinsleri için)
     const select = document.getElementById('groupFilter');
     if(select) {
         const gruplar = {
@@ -34,13 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
             en: [["all","All 🌐"], ["nonmetal","Nonmetals 🟥"], ["noble","Noble Gases 🟪"], ["alkali","Alkali Metals 🟧"], ["earth","Alkaline Earth 🟦"], ["metalloid","Metalloids 🟩"], ["transition","Transition Metals 🔘"], ["post","Post-transition 🟣"], ["lanthanide","Lanthanides 🟫"], ["actinide","Actinides 🟢"]],
             de: [["all","Alle 🌐"], ["nonmetal","Nichtmetalle 🟥"], ["noble","Edelgase 🟪"], ["alkali","Alkalimetalle 🟧"], ["earth","Erdalkalimetalle 🟦"], ["metalloid","Halbmetalle 🟩"], ["transition","Übergangsmetalle 🔘"], ["post","Schwachmetalle 🟣"], ["lanthanide","Lanthanoide 🟫"], ["actinide","Actinoide 🟢"]]
         };
-        
-        // Mevcut seçenekleri temizle ve yeni dildekileri ekle
         select.innerHTML = gruplar[gameLang].map(item => `<option value="${item[0]}">${item[1]}</option>`).join('');
     }
 });
-
-// --- DİL SİSTEMİ SONU ---
 
 const firebaseConfig = {
     apiKey: "AIzaSyDl4aJYLl4OHqqX2u0UuC34dUbpcyQdgMY",
@@ -51,25 +44,29 @@ const firebaseConfig = {
     messagingSenderId: "925424889350",
     appId: "1:925424889350:web:b7c895898c0436631b1d87"
 };
-// Ziyaretçi Sayısını Artırma Fonksiyonu
-function ziyaretciArtir() {
-    const ziyaretRef = ref(database, 'ziyaretciSayisi');
-    runTransaction(ziyaretRef, (currentValue) => {
-        return (currentValue || 0) + 1;
-    });
-    const listeRef = ref(database, 'ziyaretçiler');
-    push(listeRef, {
-        tarih: new Date().toLocaleString(),
-        isim: localStorage.getItem("oyuncuAdi") || "Misafir"
-    });
-}
 
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
+function ziyaretciArtir() {
+    const currentLang = localStorage.getItem("seciliDil") || "tr";
+    const guestLabel = gameDict[currentLang]?.guest || "Misafir";
+    
+    const ziyaretRef = ref(database, 'ziyaretciSayisi');
+    runTransaction(ziyaretRef, (currentValue) => {
+        return (currentValue || 0) + 1;
+    });
+    const listeRef = ref(database, 'ziyaretciler');
+    push(listeRef, {
+        tarih: new Date().toLocaleString(),
+        isim: localStorage.getItem("oyuncuAdi") || guestLabel
+    });
+}
+
 // --- DEĞİŞKENLER ---
 let timerInterval, hamleInterval, gameStartTime, startTime, selectedSymbol, selectedName;
-let puan = 0, can = 3, timerStarted = false, gameActive = true, isMuted = false;let kalanHamleSuresi = 10;
+let puan = 0, can = 3, timerStarted = false, gameActive = true, isMuted = false; let kalanHamleSuresi = 10;
+window.isHardMode = false;
 
 const correctSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3');
 const errorSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3');
@@ -197,7 +194,10 @@ const allElements = [
 
 // --- FIREBASE İŞLEMLERİ ---
 async function skoruKaydet(sonPuan) {
-    const isim = localStorage.getItem("oyuncuAdi") || "Misafir";
+    const currentLang = localStorage.getItem("seciliDil") || "tr";
+    const guestLabel = gameDict[currentLang]?.guest || "Misafir";
+    const isim = localStorage.getItem("oyuncuAdi") || guestLabel;
+
     try {
         await push(ref(database, 'skorlar'), {
             isim: isim,
@@ -231,12 +231,10 @@ async function liderlikTablosunuGuncelle() {
     } catch (e) { console.error("Tablo hatası:", e); }
 }
 
-// --- OYUN BİTİŞ PANELİ VE WHATSAPP ---
 async function oyunuBitir() {
     gameActive = false;
     if (timerInterval) clearInterval(timerInterval);
     
-    // 1. Güncel dili al
     const currentLang = localStorage.getItem("seciliDil") || "tr";
     const bitisMetinleri = {
         tr: { bitti: "Oyun Bitti!", puan: "Puan", sure: "Süre", sn: "sn", paylas: "Skorunu WhatsApp'ta Paylaş", tablo: "🏆 Dünya Sıralaması", kapat: "Kapat" },
@@ -248,7 +246,6 @@ async function oyunuBitir() {
     const toplamSure = document.getElementById('live-timer').innerText;
     const finalPuan = puan;
     
-    // 2. Elementleri bul
     const panel = document.getElementById('game-over-panel');
     const scoreText = document.getElementById('final-score-text');
     const panelTitle = document.querySelector('#game-over-panel h2');
@@ -257,7 +254,6 @@ async function oyunuBitir() {
     const leaderboardTitle = document.querySelector('#leaderboard-section h3');
     const closeBtn = document.querySelector('#game-over-panel button[onclick*="location.reload()"]');
     
-    // 3. Paneli güncelle
     if (panel && scoreText) {
         panel.style.display = 'block';
         if(panelTitle) panelTitle.innerText = bm.bitti;
@@ -271,7 +267,6 @@ async function oyunuBitir() {
         scoreText.innerHTML = `${bm.puan}: <b>${finalPuan}</b> <br> ${bm.sure}: <b>${toplamSure}</b> ${bm.sn}`;
     }
 
-    // 4. WhatsApp Tıklama İşlevi
     if (waBtn) {
         waBtn.onclick = () => {
             const mesajlar = {
@@ -284,47 +279,33 @@ async function oyunuBitir() {
         };
     }
 
-    // 5. Kaydet ve Görüntüle
     await skoruKaydet(finalPuan);
     liderlikTablosunuGuncelle();
 }
-// FONKSİYON BURADA BİTTİ. ALTINDA BAŞKA WHATSAPP KODU OLMAMALI!
 
 function hamleZamanlayiciBaslat() {
     if (hamleInterval) clearInterval(hamleInterval);
-    
     const wrapper = document.getElementById('progress-wrapper');
     const bar = document.getElementById('progress-bar');
     const bonusText = document.getElementById('bonus-text');
-    
     if (wrapper) wrapper.style.display = 'block';
-    
-    kalanHamleSuresi = 10; // Her yeni hamle için 10 saniyeden başla
-    
+    kalanHamleSuresi = 10;
     hamleInterval = setInterval(() => {
         kalanHamleSuresi -= 0.1;
         let yuzde = (kalanHamleSuresi / 10) * 100;
-        
         if (bar) {
             bar.style.width = yuzde + "%";
-            // Renk değişimi
             if (yuzde > 60) bar.style.backgroundColor = "#27ae60";
             else if (yuzde > 30) bar.style.backgroundColor = "#f1c40f";
             else bar.style.backgroundColor = "#e74c3c";
         }
-        
         if (bonusText) bonusText.innerText = "%" + Math.max(0, Math.floor(yuzde));
-
-        if (kalanHamleSuresi <= 0) {
-            clearInterval(hamleInterval);
-            // Süre biterse bonus %0 olur ama oyun devam eder
-        }
+        if (kalanHamleSuresi <= 0) clearInterval(hamleInterval);
     }, 100);
 }
 
-// --- OYUN MANTIĞI ---
 function initGame() {
-    // 1. DİL AYARLARI VE ARAYÜZ METİNLERİ
+    isHardMode = localStorage.getItem('zorModSecimi') === 'true';
     const currentLang = localStorage.getItem("seciliDil") || "tr";
     const arayuzMetinleri = {
         tr: { puan: "Puan", can: "Can", sure: "Süre" },
@@ -333,85 +314,66 @@ function initGame() {
     };
     const m = arayuzMetinleri[currentLang];
 
-    // Arayüz etiketlerini güncelle
     if(document.getElementById('label-puan')) document.getElementById('label-puan').innerText = m.puan;
     if(document.getElementById('label-can')) document.getElementById('label-can').innerText = m.can;
     if(document.getElementById('label-sure')) document.getElementById('label-sure').innerText = m.sure;
 
-    // 2. TEMİZLİK VE SIFIRLAMA
     if (hamleInterval) clearInterval(hamleInterval);
-    const wrapper = document.getElementById('progress-wrapper');
-    if (wrapper) wrapper.style.display = 'none';
+    if (timerInterval) clearInterval(timerInterval);
     
     const sCol = document.getElementById('symbol-col');
     const nCol = document.getElementById('name-col');
-    const panel = document.getElementById('game-over-panel');
-    
     if (!sCol || !nCol) return;
 
-    if (panel) panel.style.display = 'none'; 
-    puan = 0; 
-    can = 3; 
-    timerStarted = false; 
-    gameActive = true;
-    
-    if (timerInterval) clearInterval(timerInterval);
-
-    // Değerleri sıfırla
+    puan = 0; can = 3; timerStarted = false; gameActive = true;
     document.getElementById('puan-degeri').innerText = "0";
     document.getElementById('can-degeri').innerText = "❤️".repeat(3);
     document.getElementById('live-timer').innerText = "0";
 
-    // 3. ELEMENT FİLTRELEME VE HAVUZ OLUŞTURMA
     const range = parseInt(document.getElementById('elementRange').value) || 118;
     const count = parseInt(document.getElementById('elementCount').value) || 10;
     const group = document.getElementById('groupFilter').value;
 
     let pool = allElements.slice(0, range);
+    if (group !== "all") pool = pool.filter(el => el.grup.en === group);
     
-    // Filtreleme (Grup İngilizce anahtara göre kontrol edilir)
-    if (group !== "all") {
-        pool = pool.filter(el => el.grup.en === group);
-    }
-    
-    // Rastgele seç ve karıştır
     const gamePool = pool.sort(() => Math.random() - 0.5).slice(0, count);
-    
-    sCol.innerHTML = ''; 
-    nCol.innerHTML = '';
+    sCol.innerHTML = ''; nCol.innerHTML = '';
 
-    // 4. KARTLARI OLUŞTURMA VE EKLEME
-    // Sembol Sütunu
-    [...gamePool].sort(() => Math.random() - 0.5).forEach(el => {
-        sCol.appendChild(createCard(el.sembol, 'symbol', el.sembol, el.grup.en));
+    gamePool.sort(() => Math.random() - 0.5).forEach(el => {
+        sCol.appendChild(createCard(el.sembol, 'symbol', el.sembol, el.grup.en, isHardMode));
     });
-
-    // İsim Sütunu (Dinamik dil objesi gönderilir)
-    [...gamePool].sort(() => Math.random() - 0.5).forEach(el => {
-        nCol.appendChild(createCard(el.ad, 'name', el.sembol, el.grup.en));
+    gamePool.sort(() => Math.random() - 0.5).forEach(el => {
+        nCol.appendChild(createCard(el.ad, 'name', el.sembol, el.grup.en, isHardMode));
     });
     
-    // Liderlik tablosunu her oyun başında tazele
-    liderlikTablosunuGuncelle();
+    if (typeof liderlikTablosunuGuncelle === "function") liderlikTablosunuGuncelle();
 }
 
-
-function createCard(txt, type, mid, grp) {
+function createCard(txt, type, mid, grp, zorModMu) {
     const d = document.createElement('div');
-    d.className = `card group-${grp}`;
+    d.classList.add('card');
     
-    // Hafızadaki dili al (tr, en veya de)
-    const dil = localStorage.getItem("seciliDil") || "tr";
+    // ZOR MOD KONTROLÜ
+    // Hem parametreyi, hem hafızayı, hem de global değişkeni kontrol eder
+    const isHard = zorModMu === true || 
+                   localStorage.getItem('zorModSecimi') === 'true' || 
+                   window.isHardMode === true;
 
-    if (type === 'name') {
-        // İsim kartıysa: txt bir objedir {tr: "Hidrojen", en: "Hydrogen"...}
-        // dil 'en' ise txt['en'] diyerek Hydrogen'i çekeriz.
-        d.innerText = txt[dil]; 
-    } else {
-        // Sembol kartıysa (H, He): txt direkt metindir, olduğu gibi yaz.
-        d.innerText = txt;
+    if (isHard) {
+        // Zor moddaysa renk grubunu ekleme, sadece hard-mode sınıfını ekle
+        d.classList.add('hard-mode');
+    } else if (grp) {
+        // Zor mod değilse normal renk grubunu ekle
+        d.classList.add(`group-${grp}`);
     }
     
+    const dil = localStorage.getItem("seciliDil") || "tr";
+    if (type === 'name') {
+        d.innerText = (typeof txt === 'object') ? (txt[dil] || txt["tr"]) : txt; 
+    } else {
+        d.innerText = txt;
+    }
     d.dataset.match = mid;
     d.dataset.type = type;
     d.onclick = handleCardClick;
@@ -419,13 +381,14 @@ function createCard(txt, type, mid, grp) {
 }
 
 
+
 function handleCardClick() {
     if (!gameActive || this.classList.contains('hidden') || this.classList.contains('selected')) return;
+    const zorModAktifMi = localStorage.getItem('zorModSecimi') === 'true';
 
     if (!timerStarted) {
         timerStarted = true;
         gameStartTime = Date.now();
-        startTime = Date.now();
         hamleZamanlayiciBaslat();
         timerInterval = setInterval(() => {
             const timerEl = document.getElementById('live-timer');
@@ -434,13 +397,24 @@ function handleCardClick() {
     }
 
     if (this.dataset.type === 'symbol') {
-        if (selectedSymbol) selectedSymbol.classList.remove('selected');
+        if (selectedSymbol) {
+            selectedSymbol.classList.remove('selected');
+            if (zorModAktifMi) { selectedSymbol.style.outline = ""; selectedSymbol.style.boxShadow = ""; }
+        }
         selectedSymbol = this;
     } else {
-        if (selectedName) selectedName.classList.remove('selected');
+        if (selectedName) {
+            selectedName.classList.remove('selected');
+            if (zorModAktifMi) { selectedName.style.outline = ""; selectedName.style.boxShadow = ""; }
+        }
         selectedName = this;
     }
+
     this.classList.add('selected');
+    if (zorModAktifMi) {
+        this.style.setProperty("outline", "3px solid #f1c40f", "important");
+        this.style.setProperty("box-shadow", "0 0 20px #f1c40f", "important");
+    }
 
     if (selectedSymbol && selectedName) {
         const s = selectedSymbol, n = selectedName;
@@ -449,17 +423,17 @@ function handleCardClick() {
             let bonusCarpani = Math.max(0.1, kalanHamleSuresi / 10);
             let temelPuan = 1000;
             let havuzGenisligi = parseInt(document.getElementById('elementRange').value) || 118;
-            puan += Math.floor(temelPuan * bonusCarpani * (1 + (havuzGenisligi / 118)));
-            
+            let yeniPuan = Math.floor(temelPuan * bonusCarpani * (1 + (havuzGenisligi / 118)));
+            if (zorModAktifMi) yeniPuan = yeniPuan * 2;
+            puan += yeniPuan;
             document.getElementById('puan-degeri').innerText = puan;
             hamleZamanlayiciBaslat();
             s.classList.add('correct-flash'); n.classList.add('correct-flash');
             selectedSymbol = null; selectedName = null;
-
             setTimeout(() => {
                 s.classList.add('hidden'); n.classList.add('hidden');
                 if (document.querySelectorAll('.card:not(.hidden)').length === 0) {
-                  if (hamleInterval) clearInterval(hamleInterval);
+                    if (hamleInterval) clearInterval(hamleInterval);
                     oyunuBitir();
                 }
             }, 400);
@@ -468,15 +442,14 @@ function handleCardClick() {
             s.classList.add('error-shake'); n.classList.add('error-shake');
             can--;
             document.getElementById('can-degeri').innerText = "❤️".repeat(Math.max(0, can));
+            if (zorModAktifMi) { s.style.outline = ""; s.style.boxShadow = ""; n.style.outline = ""; n.style.boxShadow = ""; }
+            const tempS = s, tempN = n;
             selectedSymbol = null; selectedName = null;
             if (can <= 0) { 
-            if (hamleInterval) clearInterval(hamleInterval);
+                if (hamleInterval) clearInterval(hamleInterval);
                 setTimeout(() => { oyunuBitir(); }, 500);
             } else {
-                setTimeout(() => {
-                    s.classList.remove('selected', 'error-shake');
-                    n.classList.remove('selected', 'error-shake');
-                }, 500);
+                setTimeout(() => { tempS.classList.remove('selected', 'error-shake'); tempN.classList.remove('selected', 'error-shake'); }, 500);
             }
         }
     }
@@ -485,49 +458,28 @@ function handleCardClick() {
 window.addEventListener('DOMContentLoaded', () => {
     ziyaretciArtir();
     const mBtn = document.getElementById('mute-btn');
-    if (mBtn) {
-        mBtn.onclick = () => {
-            isMuted = !isMuted;
-            mBtn.innerText = isMuted ? "🔇" : "🔊";
-        };
-    }
+    if (mBtn) mBtn.onclick = () => { isMuted = !isMuted; mBtn.innerText = isMuted ? "🔇" : "🔊"; };
 
     const pDisp = document.getElementById("player-name");
     if (pDisp) {
-        pDisp.innerText = localStorage.getItem("oyuncuAdi") || "Misafir";
+        const currentLang = localStorage.getItem("seciliDil") || "tr";
+        const guestText = gameDict[currentLang]?.guest || "Misafir";
+        pDisp.innerText = localStorage.getItem("oyuncuAdi") || guestText;
     }
 
-    // Sadece game.html sayfasındaysak oyunu başlatır
-    if (document.querySelector('.game-container')) {
-        initGame();
-    }
+    if (document.querySelector('.game-container')) initGame();
 });
 
 function setLanguage(lang) {
     localStorage.setItem("seciliDil", lang);
-    
-    // Aktif bayrağı görsel olarak işaretle
     document.querySelectorAll('.language-selector button').forEach(btn => {
         btn.classList.remove('active');
         const bayrak = (lang === 'tr' ? '🇹🇷' : lang === 'en' ? '🇺🇸' : '🇩🇪');
-        if (btn.innerText.includes(bayrak)) {
-            btn.classList.add('active');
-        }
+        if (btn.innerText.includes(bayrak)) btn.classList.add('active');
     });
-
-    // --- KRİTİK EKLEME: Seçilen dile göre arayüz metinlerini de güncelleyelim ---
-    const placeholder = {
-        tr: "Element Ara...",
-        en: "Search Element...",
-        de: "Element suchen..."
-    };
-    // Eğer varsa bir arama kutusu veya başlık, burada güncelleyebilirsin.
-
-    if (typeof initGame === "function") {
-        initGame(); // Kartları yeniden oluşturur
-    }
+    // Sayfayı yenilemek en güvenli dil geçişidir
+    window.location.reload();
 }
 
-// Fonksiyonun dışarıdan (HTML'den) erişilebilir olduğundan emin olalım
 window.setLanguage = setLanguage;
 window.initGame = initGame;

@@ -201,7 +201,7 @@ async function skoruKaydet(sonPuan) {
     try {
         await push(ref(database, 'skorlar'), {
             isim: isim,
-            puan: parseInt(sonPuan),
+            puan: Number(sonPuan),
             tarih: new Date().toLocaleString()
         });
     } catch (e) { console.error("Kayıt hatası:", e); }

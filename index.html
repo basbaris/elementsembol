@@ -75,9 +75,10 @@
             </div>
         </section>
 
-        <footer style="margin-top: 50px; padding: 20px; text-align: center; font-size: 0.8rem; opacity: 0.8; color: white;">
-            <div style="margin-bottom: 10px;">
+        <footer style="margin-top: 50px; padding: 10px; text-align: center; font-size: 0.8rem; opacity: 0.8; color: white;">
+            <div style="margin-bottom: 10px; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 20px;">
                 <a href="about.html" id="f-about" style="color: white; text-decoration: none; margin-right: 15px;">Hakkımızda</a>
+                <a href="terms.html" id="f-terms" style="color: white; text-decoration: none; margin-right: 15px;">Kullanım Koşulları</a>
                 <a href="privacy.html" id="f-privacy" style="color: white; text-decoration: none;">Gizlilik Politikası</a>
                 <a href="contact.html" id="f-contact" style="color: white; text-decoration: none; margin-left: 15px;">Bize Ulaşın</a>
             </div>
@@ -118,9 +119,9 @@
 window.setLanguage = function(lang) {
     localStorage.setItem("seciliDil", lang);
     const dictionary = {
-        tr: { hard: "ZOR MOD: Tek Renk + 2X PUAN! ⚡", title: "Element Avcısı Pro", desc: "Kimya dünyasını oyunla keşfet!", start: "Oyunu Başlat", login: "İsimle Giriş Yap", guest: "Misafir", welcome: "Hoş Geldin, ", leader: "🏆 Dünya Sıralaması", rank: "Sıra", player: "Oyuncu", score: "Puan", aboutT: "Element Avcısı Hakkında", aboutP: "Bu oyun, kimya öğrenen öğrencilerin element sembollerini eğlenceli bir şekilde ezberlemesi için tasarlanmıştır...", howT: "🎮 Nasıl Oynanır?", h1: "3 Can Hakkı: 3 hata yapma hakkın var.", h2: "Puanlama: Her doğru eşleşme puan kazandırır.", h3: "Oyun Sonu: Skorun dünya sıralamasına kaydedilir.", h4: "Seçenekler: Üst panelden ayarları yapabilirsiniz.", f1: "Hakkımızda", f2: "Gizlilik Politikası", f3: "Bize Ulaşın", copy: "© 2026 Element Avcısı Pro", waText: "Arkadaşlarına Meydan Oku!"  },
-        en: { hard: "HARD MODE: Single Color + 2X SCORE! ⚡", title: "Element Hunter Pro", desc: "Discover chemistry through play!", start: "Start Game", login: "Login with Name", guest: "Guest", welcome: "Welcome, ", leader: "🏆 Global Ranking", rank: "Rank", player: "Player", score: "Score", aboutT: "About Element Hunter", aboutP: "This game is designed for students to learn symbols in a fun way...", howT: "🎮 How to Play?", h1: "3 Lives: You have 3 attempts allowed.", h2: "Scoring: Each match improves your rank.", h3: "Game Over: Score is auto-saved to leaderboard.", h4: "Options: Adjust settings via the top panel.", f1: "About Us", f2: "Privacy Policy", f3: "Contact Us", copy: "© 2026 Element Hunter Pro", waText: "Challenge Your Friends!" },
-        de: { hard: "HARD-MODUS: Einzelfarbe + 2X PUNKTE! ⚡", title: "Element Jäger Pro", desc: "Chemie spielerisch entdecken!", start: "Spiel Starten", login: "Einloggen", guest: "Gast", welcome: "Willkommen, ", leader: "🏆 Weltrangliste", rank: "Rang", player: "Spieler", score: "Punkt", aboutT: "Über Element Jäger", aboutP: "Dieses Spiel hilft Schülern, Symbole spielerisch zu lernen...", howT: "🎮 Wie spielt man?", h1: "3 Leben: Du hast 3 Versuche.", h2: "Punkte: Jedes Match zählt.", h3: "Spielende: Score wird in die Liste eingetragen.", h4: "Optionen: Einstellungen oben anpassen.", f1: "Über uns", f2: "Datenschutz", f3: "Kontakt", copy: "© 2026 Element Jäger Pro", waText: "Fordere deine Freunde heraus!" }
+        tr: { hard: "ZOR MOD: Tek Renk + 2X PUAN! ⚡", title: "Element Avcısı Pro", desc: "Kimya dünyasını oyunla keşfet!", start: "Oyunu Başlat", login: "İsimle Giriş Yap", guest: "Misafir", welcome: "Hoş Geldin, ", leader: "🏆 Dünya Sıralaması", rank: "Sıra", player: "Oyuncu", score: "Puan", aboutT: "Element Avcısı Hakkında", aboutP: "Bu oyun, kimya öğrenen öğrencilerin element sembollerini eğlenceli bir şekilde ezberlemesi için tasarlanmıştır...", howT: "🎮 Nasıl Oynanır?", h1: "3 Can Hakkı: 3 hata yapma hakkın var.", h2: "Puanlama: Her doğru eşleşme puan kazandırır.", h3: "Oyun Sonu: Skorun dünya sıralamasına kaydedilir.", h4: "Seçenekler: Üst panelden ayarları yapabilirsiniz.", f1: "Hakkımızda", f2: "Gizlilik Politikası", f3: "Bize Ulaşın", f4: "Kullanım Koşulları", mainDesc: "Periyodik tablo elementlerini eğlenerek öğrenin. En yüksek puanı toplayın ve dünya sıralamasına girin!", copy: "© 2026 Element Avcısı Pro", waText: "Arkadaşlarına Meydan Oku!"  },
+        en: { hard: "HARD MODE: Single Color + 2X SCORE! ⚡", title: "Element Hunter Pro", desc: "Discover chemistry through play!", start: "Start Game", login: "Login with Name", guest: "Guest", welcome: "Welcome, ", leader: "🏆 Global Ranking", rank: "Rank", player: "Player", score: "Score", aboutT: "About Element Hunter", aboutP: "This game is designed for students to learn symbols in a fun way...", howT: "🎮 How to Play?", h1: "3 Lives: You have 3 attempts allowed.", h2: "Scoring: Each match improves your rank.", h3: "Game Over: Score is auto-saved to leaderboard.", h4: "Options: Adjust settings via the top panel.", f1: "About Us", f2: "Privacy Policy", f3: "Contact Us", f4: "Terms of Use", mainDesc: "Learn periodic table elements with fun. Get the highest score and join the global ranking!", copy: "© 2026 Element Hunter Pro", waText: "Challenge Your Friends!" },
+        de: { hard: "HARD-MODUS: Einzelfarbe + 2X PUNKTE! ⚡", title: "Element Jäger Pro", desc: "Chemie spielerisch entdecken!", start: "Spiel Starten", login: "Einloggen", guest: "Gast", welcome: "Willkommen, ", leader: "🏆 Weltrangliste", rank: "Rang", player: "Spieler", score: "Punkt", aboutT: "Über Element Jäger", aboutP: "Dieses Spiel hilft Schülern, Symbole spielerisch zu lernen...", howT: "🎮 Wie spielt man?", h1: "3 Leben: Du hast 3 Versuche.", h2: "Punkte: Jedes Match zählt.", h3: "Spielende: Score wird in die Liste eingetragen.", h4: "Optionen: Einstellungen oben anpassen.", f1: "Über uns", f2: "Datenschutz", f3: "Kontakt", f4: "Nutzungsbedingungen", mainDesc: "Lernen Sie die Elemente des Periodensystems mit Spaß. Holen Sie sich die höchste Punktzahl!", copy: "© 2026 Element Jäger Pro", waText: "Fordere deine Freunde heraus!" }
     };
 
     const s = dictionary[lang];
@@ -163,8 +164,10 @@ window.setLanguage = function(lang) {
     if(document.getElementById('f-privacy')) document.getElementById('f-privacy').innerText = s.f2;
     if(document.getElementById('f-contact')) document.getElementById('f-contact').innerText = s.f3;
     if(document.getElementById('f-copy')) document.getElementById('f-copy').innerText = s.copy;
+    if(document.getElementById('f-terms')) document.getElementById('f-terms').innerText = s.f4;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) { metaDesc.setAttribute("content", s.mainDesc); }
 };
-
   function skorlariGetir() {
     const skorRef = ref(database, 'skorlar');
     const enIyilerSorgu = query(skorRef, orderByChild('puan'), limitToLast(50));

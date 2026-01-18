@@ -10,6 +10,24 @@
     </title>
     <link rel="stylesheet" href="style.css?v=1">
     <style>
+ 
+      .back-link {
+        display: block;
+        text-align: center;
+        margin-top: 30px;
+        color: white;
+        text-decoration: none; 
+        opacity: 0.6;
+        transition: all 0.3s ease; 
+      }
+ 
+      .back-link:hover {
+        opacity: 1;
+        text-decoration: none;
+        transform: translateY(-3px);
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); 
+      }
+  
       .contact-container {
         display: flex;
         flex-direction: column;
@@ -21,7 +39,7 @@
         color: white;
         text-align: center;
       }
-
+  
       .contact-card {
         background: rgba(255, 255, 255, 0.08);
         backdrop-filter: blur(15px);
@@ -64,18 +82,6 @@
         box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
       }
 
-      .back-link {
-        color: white;
-       text-decoration: none;
-        opacity: 0.6;
-        font-size: 0.9rem;
-        transition: 0.3s;
-      }
-
-     .back-link:hover {
-        opacity: 1;
-        text-decoration: underline;
-      }
     </style>
 </head>
 <body>

@@ -1,34 +1,38 @@
 <!DOCTYPE html>
 <html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9457945949630736" crossorigin="anonymous"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Element Avcısı Pro - Kimya Sembol Eşleştirme Oyunu</title>
-    <meta name="description" content="Periyodik tablo elementlerini eğlenerek öğrenin. En yüksek puanı toplayın ve dünya sıralamasına girin!">
-    <meta name="keywords" content="kimya oyunu, elementler, sembol eşleştirme, periyodik tablo, eğitici oyun">
-    <link rel="stylesheet" href="style.css?v=1">
-</head>
-<body>
-    <div class="landing-page">
+    <head>
+      <meta charset="UTF-8">
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9457945949630736" crossorigin="anonymous"></script>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Element Avcısı Pro - Kimya Sembol Eşleştirme Oyunu
+      </title>
+      <meta name="description" content="Periyodik tablo elementlerini eğlenerek öğrenin. En yüksek puanı toplayın ve dünya sıralamasına girin!">
+      <meta name="keywords" content="kimya oyunu, elementler, sembol eşleştirme, periyodik tablo, eğitici oyun">
+      <link rel="stylesheet" href="style.css?v=1">
+    </head>
+  
+    <body>
+      <div class="landing-page">
         <img src="tablo.png" alt="Periyodik Table" class="main-img">
-        
-        <div class="hero-section">
-            <h1 id="main-title">Element Avcısı Pro</h1>
-            <p id="main-desc">Kimya dünyasını oyunla keşfet!</p>
-        </div>
-        
-        <div class="difficulty-settings" style="margin: 20px 0; color: white; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px;">
-          <label style="cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 1.1rem;">
-          <input type="checkbox" id="hard-mode-toggle" style="width: 22px; height: 22px; cursor: pointer;">
-            <span id="hard-mode-text" style="color: white; font-weight: bold; font-size: 18px;">ZOR MOD: Tek Renk + 2X PUAN! ⚡</span>
-          </label>
-        </div>
+ 
+      <div class="hero-section">
+        <h1 id="main-title">Element Avcısı Pro</h1>
+          <p id="main-desc">Kimya dünyasını oyunla keşfet!</p>
+      </div>
+  
+      <div class="difficulty-settings" style="margin: 20px 0; color: white; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px;">
+        <label style="cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 1.1rem;">
+        <input type="checkbox" id="hard-mode-toggle" style="width: 22px; height: 22px; cursor: pointer;">
+          <span id="hard-mode-text" style="color: white; font-weight: bold; font-size: 18px;">ZOR MOD: Tek Renk + 2X PUAN! 
+          </span>
+ 
+        </label>
+      </div>
 
-        <div class="landing-buttons">
-            <a href="game.html" class="btn-start" id="startBtn">Oyunu Başlat</a>
-            <a href="#" class="btn-login" id="loginBtn">İsimle Giriş Yap</a>
-        </div>
+      <div class="landing-buttons">
+        <a href="game.html" class="btn-start" id="startBtn">Oyunu Başlat</a>
+        <a href="#" class="btn-login" id="loginBtn">İsimle Giriş Yap</a>
+      </div>
 
         <div class="language-selector">
             <button onclick="setLanguage('tr')">🇹🇷</button>
@@ -119,9 +123,9 @@
 window.setLanguage = function(lang) {
     localStorage.setItem("seciliDil", lang);
     const dictionary = {
-        tr: { hard: "ZOR MOD: Tek Renk + 2X PUAN! ⚡", title: "Element Avcısı Pro", desc: "Kimya dünyasını oyunla keşfet!", start: "Oyunu Başlat", login: "İsimle Giriş Yap", guest: "Misafir", welcome: "Hoş Geldin, ", leader: "🏆 Dünya Sıralaması", rank: "Sıra", player: "Oyuncu", score: "Puan", aboutT: "Element Avcısı Hakkında", aboutP: "Bu oyun, kimya öğrenen öğrencilerin element sembollerini eğlenceli bir şekilde ezberlemesi için tasarlanmıştır...", howT: "🎮 Nasıl Oynanır?", h1: "3 Can Hakkı: 3 hata yapma hakkın var.", h2: "Puanlama: Her doğru eşleşme puan kazandırır.", h3: "Oyun Sonu: Skorun dünya sıralamasına kaydedilir.", h4: "Seçenekler: Üst panelden ayarları yapabilirsiniz.", f1: "Hakkımızda", f2: "Gizlilik Politikası", f3: "Bize Ulaşın", f4: "Kullanım Koşulları", mainDesc: "Periyodik tablo elementlerini eğlenerek öğrenin. En yüksek puanı toplayın ve dünya sıralamasına girin!", copy: "© 2026 Element Avcısı Pro", waText: "Arkadaşlarına Meydan Oku!"  },
-        en: { hard: "HARD MODE: Single Color + 2X SCORE! ⚡", title: "Element Hunter Pro", desc: "Discover chemistry through play!", start: "Start Game", login: "Login with Name", guest: "Guest", welcome: "Welcome, ", leader: "🏆 Global Ranking", rank: "Rank", player: "Player", score: "Score", aboutT: "About Element Hunter", aboutP: "This game is designed for students to learn symbols in a fun way...", howT: "🎮 How to Play?", h1: "3 Lives: You have 3 attempts allowed.", h2: "Scoring: Each match improves your rank.", h3: "Game Over: Score is auto-saved to leaderboard.", h4: "Options: Adjust settings via the top panel.", f1: "About Us", f2: "Privacy Policy", f3: "Contact Us", f4: "Terms of Use", mainDesc: "Learn periodic table elements with fun. Get the highest score and join the global ranking!", copy: "© 2026 Element Hunter Pro", waText: "Challenge Your Friends!" },
-        de: { hard: "HARD-MODUS: Einzelfarbe + 2X PUNKTE! ⚡", title: "Element Jäger Pro", desc: "Chemie spielerisch entdecken!", start: "Spiel Starten", login: "Einloggen", guest: "Gast", welcome: "Willkommen, ", leader: "🏆 Weltrangliste", rank: "Rang", player: "Spieler", score: "Punkt", aboutT: "Über Element Jäger", aboutP: "Dieses Spiel hilft Schülern, Symbole spielerisch zu lernen...", howT: "🎮 Wie spielt man?", h1: "3 Leben: Du hast 3 Versuche.", h2: "Punkte: Jedes Match zählt.", h3: "Spielende: Score wird in die Liste eingetragen.", h4: "Optionen: Einstellungen oben anpassen.", f1: "Über uns", f2: "Datenschutz", f3: "Kontakt", f4: "Nutzungsbedingungen", mainDesc: "Lernen Sie die Elemente des Periodensystems mit Spaß. Holen Sie sich die höchste Punktzahl!", copy: "© 2026 Element Jäger Pro", waText: "Fordere deine Freunde heraus!" }
+        tr: { hard: "ZOR MOD: Tek Renk + 2X PUAN! ⚡", title: "Element Avcısı Pro", desc: "Kimya dünyasını oyunla keşfet!", start: "Oyunu Başlat", login: "İsimle Giriş Yap", guest: "Misafir", welcome: "Hoş Geldin, ", leader: "🏆 Dünya Sıralaması", rank: "Sıra", player: "Oyuncu", score: "Puan", aboutT: "Element Avcısı Hakkında", aboutP: "Bu oyun, kimya öğrenen öğrencilerin element sembollerini eğlenceli bir şekilde ezberlemesi için tasarlanmıştır...", howT: "🎮 Nasıl Oynanır?", h1: "3 Can Hakkı: 3 hata yapma hakkın var.", h2: "Puanlama: Her doğru eşleşme puan kazandırır.", h3: "Oyun Sonu: Skorun dünya sıralamasına kaydedilir.", h4: "Seçenekler: Üst panelden ayarları yapabilirsiniz.", f1: "Hakkımızda", f2: "Gizlilik Politikası", f3: "Bize Ulaşın", f4: "Kullanım Koşulları", mainDesc: "Periyodik tablo elementlerini eğlenerek öğrenin. En yüksek puanı toplayın ve dünya sıralamasına girin!", copy: "© 2026 Element Avcısı Pro",loading: "Skorlar Yükleniyor...", waText: "Arkadaşlarına Meydan Oku!"  },
+        en: { hard: "HARD MODE: Single Color + 2X SCORE! ⚡", title: "Element Hunter Pro", desc: "Discover chemistry through play!", start: "Start Game", login: "Login with Name", guest: "Guest", welcome: "Welcome, ", leader: "🏆 Global Ranking", rank: "Rank", player: "Player", score: "Score", aboutT: "About Element Hunter", aboutP: "This game is designed for students to learn symbols in a fun way...", howT: "🎮 How to Play?", h1: "3 Lives: You have 3 attempts allowed.", h2: "Scoring: Each match improves your rank.", h3: "Game Over: Score is auto-saved to leaderboard.", h4: "Options: Adjust settings via the top panel.", f1: "About Us", f2: "Privacy Policy", f3: "Contact Us", f4: "Terms of Use", mainDesc: "Learn periodic table elements with fun. Get the highest score and join the global ranking!", copy: "© 2026 Element Hunter Pro", loading: "Loading Scores...", waText: "Challenge Your Friends!" },
+        de: { hard: "HARD-MODUS: Einzelfarbe + 2X PUNKTE! ⚡", title: "Element Jäger Pro", desc: "Chemie spielerisch entdecken!", start: "Spiel Starten", login: "Einloggen", guest: "Gast", welcome: "Willkommen, ", leader: "🏆 Weltrangliste", rank: "Rang", player: "Spieler", score: "Punkt", aboutT: "Über Element Jäger", aboutP: "Dieses Spiel hilft Schülern, Symbole spielerisch zu lernen...", howT: "🎮 Wie spielt man?", h1: "3 Leben: Du hast 3 Versuche.", h2: "Punkte: Jedes Match zählt.", h3: "Spielende: Score wird in die Liste eingetragen.", h4: "Optionen: Einstellungen oben anpassen.", f1: "Über uns", f2: "Datenschutz", f3: "Kontakt", f4: "Nutzungsbedingungen", mainDesc: "Lernen Sie die Elemente des Periodensystems mit Spaß. Holen Sie sich die höchste Punktzahl!", copy: "© 2026 Element Jäger Pro", loading: "Spielstände werden geladen...", waText: "Fordere deine Freunde heraus!" }
     };
 
     const s = dictionary[lang];
@@ -167,14 +171,25 @@ window.setLanguage = function(lang) {
     if(document.getElementById('f-terms')) document.getElementById('f-terms').innerText = s.f4;
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) { metaDesc.setAttribute("content", s.mainDesc); }
+    if (typeof skorlariGetir === 'function') {
+        skorlariGetir(); 
+    }
 };
   function skorlariGetir() {
+    const currentLang = localStorage.getItem("seciliDil") || "tr"; 
+    const loadingTexts = { 
+        tr: "Skorlar Yükleniyor...", 
+        en: "Loading Scores...", 
+        de: "Spielstände werden geladen..." 
+    };
+       const tbody = document.getElementById('leaderboard-body');
+        if(!tbody) return;
+       tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:20px;">${loadingTexts[currentLang]}</td></tr>`;
+       
     const skorRef = ref(database, 'skorlar');
     const enIyilerSorgu = query(skorRef, orderByChild('puan'), limitToLast(50));
     onValue(enIyilerSorgu, (snapshot) => {
-        const tbody = document.getElementById('leaderboard-body');
-        if(!tbody) return;
-        tbody.innerHTML = ""; 
+      tbody.innerHTML = "";
         let tumSkorlar = [];
         snapshot.forEach(c => { if(c.val().puan) tumSkorlar.push(c.val()); });
         tumSkorlar.sort((a, b) => b.puan - a.puan);
@@ -185,6 +200,11 @@ window.setLanguage = function(lang) {
             if (!gorulenIsimler.has(isimKey)) { finalSkorlar.push(skor); gorulenIsimler.add(isimKey); }
             if (finalSkorlar.length === 10) break;
         }
+          if (finalSkorlar.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:20px;">-</td></tr>`;
+            return;
+        }
+        
         finalSkorlar.forEach((skor, index) => {
             const tr = document.createElement('tr');
             let emoji = (index === 0) ? "🥇" : (index === 1) ? "🥈" : (index === 2) ? "🥉" : index + 1;

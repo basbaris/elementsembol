@@ -249,38 +249,83 @@ body:not(:has(.landing-page)) {
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
-/* --- GÜNCELLENMİŞ RENK GRUPLARI (Tam Uyumlu) --- */
+/* --- TÜM GRUPLAR İÇİN GÜNCELLENMİŞ RENK PALETİ (10 GRUP) --- */
 
-/* Ametaller */
-.group-ametal, .group-nonmetal { background-color: #f1948a !important; color: white; }
+/* 1. Ametaller 🟥 */
+.group-nonmetal { 
+    background-color: #f1948a !important; 
+    color: white !important; 
+}
 
-/* Soygazlar */
-.group-soygaz, .group-noble { background-color: #bb8fce !important; color: white; }
+/* 2. Soygazlar 🟪 */
+.group-noble { 
+    background-color: #bb8fce !important; 
+    color: white !important; 
+}
 
-/* Alkali Metaller */
-.group-alkali { background-color: #f8c471 !important; color: #5d4037; }
+/* 3. Alkali Metaller 🟧 */
+.group-alkali { 
+    background-color: #f8c471 !important; 
+    color: #5d4037 !important; 
+}
 
-/* Toprak Alkali Metaller */
-.group-toprak-alkali, .group-earth { background-color: #7fb3d5 !important; color: white; }
+/* 4. Toprak Alkali Metaller 🟦 */
+.group-earth { 
+    background-color: #7fb3d5 !important; 
+    color: white !important; 
+}
 
-/* Yarımetaller */
-.group-yarımetal, .group-metalloid { background-color: #76d7c4 !important; color: #1a5276; }
+/* 5. Yarımetaller 🟩 */
+.group-metalloid { 
+    background-color: #76d7c4 !important; 
+    color: #1a5276 !important; 
+}
 
-/* Halojenler */
-.group-halojen, .group-halogen { background-color: #f7dc6f !important; color: #7d6608; }
+/* 6. Halojenler 🟡 */
+.group-halogen { 
+    background-color: #f7dc6f !important; 
+    color: #7d6608 !important; 
+}
 
-/* Genel Metaller (Geçiş metalleri ve diğerleri) */
-.group-metal, .group-transition, .group-post { background-color: #95a5a6 !important; color: white; }
+/* 7. Geçiş Metalleri 🔘 */
+.group-transition { 
+    background-color: #95a5a6 !important; 
+    color: white !important; 
+}
 
-/* Lantanit ve Aktinitler */
-.group-lanthanide, .group-actinide { background-color: #edbb99 !important; color: white; }
+/* 8. Zayıf Metaller (Post-transition) 🟣 */
+.group-post-transition { 
+    background-color: #af7ac5 !important; 
+    color: white !important; 
+}
 
-/* Eğer listede olmayan bir grup gelirse diye varsayılan renk */
+/* 9. Lantanitler 🟫 */
+.group-lanthanide { 
+    background-color: #d35400 !important; 
+    color: white !important; 
+}
+
+/* 10. Aktinitler 🟢 */
+.group-actinide { 
+    background-color: #27ae60 !important; 
+    color: white !important; 
+}
+
+/* --- KART VE VARSAYILAN YAPI --- */
 .card {
-    background-color: #34495e; /* Şeffaf kalmaması için koyu gri/mavi taban */
+    background-color: #34495e;
+    color: white;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    transition: transform 0.2s ease;
 }
 
 
+.card:hover {
+    transform: scale(1.05);
+}
 
 /* Doğru Eşleşme Efekti */
 .correct-flash {

@@ -362,16 +362,18 @@ function initGame() {
     isHardMode = localStorage.getItem('zorModSecimi') === 'true';
     const currentLang = localStorage.getItem("seciliDil") || "tr";
     const arayuzMetinleri = {
-        tr: { puan: "Puan", can: "Can", sure: "Süre" },
-        en: { puan: "Score", can: "Lives", sure: "Time" },
-        de: { puan: "Punkt", can: "Leben", sure: "Zeit" }
+        tr: { puan: "Puan", can: "Can", sure: "Süre", bonus: "Hamle Bonusu", sn: "sn" },
+        en: { puan: "Score", can: "Lives", sure: "Time", bonus: "Move Bonus", sn: "sec" },
+        de: { puan: "Punkt", can: "Leben", sure: "Zeit", bonus: "Zugbonus", sn: "sek" }
     };
     const m = arayuzMetinleri[currentLang];
 
     if(document.getElementById('label-puan')) document.getElementById('label-puan').innerText = m.puan;
     if(document.getElementById('label-can')) document.getElementById('label-can').innerText = m.can;
     if(document.getElementById('label-sure')) document.getElementById('label-sure').innerText = m.sure;
-
+    if(document.getElementById('label-hamle-bonusu')) document.getElementById('label-hamle-bonusu').innerText = m.bonus + ":";
+    if(document.getElementById('label-sn-unit')) document.getElementById('label-sn-unit').innerText = m.sn;
+ 
     if (hamleInterval) clearInterval(hamleInterval);
     if (timerInterval) clearInterval(timerInterval);
     
@@ -445,7 +447,7 @@ function handleCardClick() {
         gameStartTime = Date.now();
         hamleZamanlayiciBaslat();
         timerInterval = setInterval(() => {
-            const timerEl = document.getElementById('live-timer');
+            const timerEl = document.getElementById('live-timer-text');
             if(timerEl) timerEl.innerText = Math.floor((Date.now() - gameStartTime) / 1000);
         }, 1000);
     }
@@ -538,30 +540,30 @@ window.addEventListener('DOMContentLoaded', () => {
         };
     }
 
+// script.js içindeki setLanguage fonksiyonunun en doğru hali:
 function setLanguage(lang) {
-    localStorage.setItem("seciliDil", lang);
-    document.querySelectorAll('.language-selector button').forEach(btn => {
-        btn.classList.remove('active');
-        const bayrak = (lang === 'tr' ? '🇹🇷' : lang === 'en' ? '🇺🇸' : '🇩🇪');
-        if (btn.innerText.includes(bayrak)) btn.classList.add('active');
-    });
-// script.js içindeki setLanguage fonksiyonunu şu şekilde güncelle:
-function setLanguage(lang) {
+    // 1. Seçilen dili hafızaya kaydet
     localStorage.setItem("seciliDil", lang);
     
-    // Sayfayı yenilemek yerine, index.html'deki setLanguage'i çağır
-    if (typeof window.setLanguage === 'function') {
-        window.setLanguage(lang);
-    }
-
+    // 2. Sayfadaki butonların aktiflik durumunu güncelle (Görsel geri bildirim)
     document.querySelectorAll('.language-selector button').forEach(btn => {
         btn.classList.remove('active');
         const bayrak = (lang === 'tr' ? '🇹🇷' : lang === 'en' ? '🇺🇸' : '🇩🇪');
         if (btn.innerText.includes(bayrak)) btn.classList.add('active');
     });
+
+    // 3. EĞER index.html sayfasındaysak arayüzü güncelle
+    // (Aşağıdaki kontrol döngüye girmeyi engeller)
+    if (typeof updateIndexPageLabels === 'function') {
+        updateIndexPageLabels(lang);
+    }
+    
+    // 4. EĞER game.html sayfasındaysak oyunu veya etiketleri güncelle
+    if (document.querySelector('.game-container')) {
+        initGame(); // Oyunu yeni dille tekrar başlatır veya etiketleri günceller
+    }
 }
 
-}
-
+// Fonksiyonları global yapalım
 window.setLanguage = setLanguage;
 window.initGame = initGame;

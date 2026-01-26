@@ -420,7 +420,7 @@ body:not(:has(.landing-page)) {
     border-color: #00ff88;
     background: rgba(0, 255, 136, 0.2);
 }
-<style>
+
     /* Kontrol gruplarının yan yana düzgün durmasını sağlar */
     .controls-container {
         display: flex;
@@ -446,4 +446,12 @@ body:not(:has(.landing-page)) {
         width: 100% !important; /* Kutuların genişliğini eşitler */
         max-width: 120px;
     }
-</style>
+  
+/* Tabloyu ekrana sığdırır, taşmayı engeller */
+.table-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    box-sizing: border-box;
+}

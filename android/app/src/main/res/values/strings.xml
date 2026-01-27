@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Element Avcısı Pro</string>
+    <string name="title_activity_main">Element Avcısı Pro</string>
+    <string name="package_name">com.basbaris.elementavci</string>
+    <string name="custom_url_scheme">com.basbaris.elementavci</string>
+</resources>

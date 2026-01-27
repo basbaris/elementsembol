@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9457945949630736" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Element Avcısı Pro</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="header">
+        <h1 id="game-main-title">Element Avcısı</h1> 
+        
+        <div id="user-display" style="font-size: 1.1rem; font-weight: bold; color: #2c3e50; margin-bottom: 10px;">
+            <span id="game-player-label">Oyuncu:</span> <span id="player-name" style="color: #3498db;">Misafir</span>
+            <div style="margin-top: 5px;">
+                ⏱️ <span id="live-timer-text">0</span> <span id="label-sn-unit">sn</span>
+                <button id="mute-btn" title="Sesi Aç/Kapat" style="background: white; border: 1px solid #ddd; border-radius: 5px; cursor: pointer; padding: 2px 8px; margin-left: 10px;">🔊</button>
+            </div>
+            <div class="stats" style="margin-top: 10px; padding: 10px; background: rgba(255,255,255,0.8); border-radius: 12px; display: inline-block;">
+                <span id="label-puan">Puan</span>: <b id="puan-degeri" style="color: #27ae60;">0</b> | 
+                <span id="label-can">Can</span>: <b id="can-degeri">❤️❤️❤️</b> | 
+                <span id="label-sure">Süre</span>: <b id="live-timer">0</b>
+            </div>
+        </div>
+
+        <div id="progress-wrapper" style="width: 100%; max-width: 300px; margin: 15px auto; display: none;"> 
+          <div id="progress-container" style="width: 100%; background: #eee; height: 12px; border-radius: 6px; overflow: hidden; border: 1px solid #ddd;">
+            <div id="progress-bar" style="width: 100%; background: #27ae60; height: 100%; transition: width 0.1s linear;"></div>
+          </div>
+          <div style="font-size: 0.8rem; color: #7f8c8d; margin-top: 4px;"><span id="label-hamle-bonusu">Hamle Bonusu</span>: <span id="bonus-text">100%</span></div>
+        </div>
+
+        <div class="controls-container">
+            <div class="control-group">
+                <label id="game-range-label">Aralık (1-118):</label>
+                <input type="number" id="elementRange" value="118" min="1" max="118" onchange="initGame()">
+            </div>
+            
+            <div class="control-group">
+                <label id="game-group-label">Grup Filtresi:</label>
+                <select id="groupFilter" onchange="initGame()">
+                    </select>
+            </div>
+
+            <div class="control-group">
+                <label id="game-pair-label">Kart Çifti:</label>
+                <input type="number" id="elementCount" value="10" min="1" max="50" onchange="initGame()">
+            </div>
+        </div>
+    </div>
+
+    <div class="game-container">
+        <div class="column" id="symbol-col"></div>
+        <div class="column" id="name-col"></div>
+    </div>
+
+    <div id="game-over-panel" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; width: 90%; max-width: 400px; background: rgba(44, 62, 80, 0.95); backdrop-filter: blur(15px); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); color: white; text-align: center;">
+        
+        <h2 style="color: #e67e22; margin-bottom: 5px;">Oyun Bitti!</h2>
+        
+        <div id="final-score-text" style="font-size: 1.2rem; margin-bottom: 20px; line-height: 1.6;">
+            Puan: 0 <br> Süre: 0 sn
+        </div>
+        <button id="whatsapp-btn" style="background-color: #25D366; color: white; border: none; padding: 15px; border-radius: 30px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; gap: 10px; width: 100%; font-size: 1rem;">
+          <span id="wa-btn-text">Skorunu WhatsApp'ta Paylaş</span> 🚀
+        </button>
+
+        <div id="leaderboard-section">
+            <h3 style="margin-bottom: 10px;">🏆 Dünya Sıralaması</h3>
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                <tbody id="leaderboard-body"></tbody>
+            </table>
+        </div>
+
+        <button onclick="location.reload()" style="margin-top: 20px; background: none; border: 1px solid white; color: white; padding: 8px 15px; border-radius: 20px; cursor: pointer; opacity: 0.7;">Kapat</button>
+    </div>
+
+    <button class="reset-btn" onclick="initGame()" id="reset-btn-text">Yeniden Başlat / Karıştır</button>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>

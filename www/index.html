@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="tr">
+    <head>
+      <meta charset="UTF-8">
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9457945949630736" crossorigin="anonymous"></script>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Element Avcısı Pro - Kimya Sembol Eşleştirme Oyunu
+      </title>
+      <meta name="description" content="Periyodik tablo elementlerini eğlenerek öğrenin. En yüksek puanı toplayın ve dünya sıralamasına girin!">
+      <meta name="keywords" content="kimya oyunu, elementler, sembol eşleştirme, periyodik tablo, eğitici oyun">
+      <link rel="stylesheet" href="style.css?v=1">
+    </head>
+  
+    <body>
+      <div class="landing-page">
+        <img src="tablo.png" alt="Periyodik Table" class="main-img">
+ 
+      <div class="hero-section">
+        <h1 id="main-title">Element Avcısı Pro</h1>
+          <p id="main-desc">Kimya dünyasını oyunla keşfet!</p>
+      </div>
+  
+      <div class="difficulty-settings" style="margin: 20px 0; color: white; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px;">
+        <label style="cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 1.1rem;">
+        <input type="checkbox" id="hard-mode-toggle" style="width: 22px; height: 22px; cursor: pointer;">
+          <span id="hard-mode-text" style="color: white; font-weight: bold; font-size: 18px;">ZOR MOD: Tek Renk + 2X PUAN! 
+          </span>
+ 
+        </label>
+      </div>
+
+      <div class="landing-buttons">
+        <a href="game.html" class="btn-start" id="startBtn">Oyunu Başlat</a>
+        <a href="#" class="btn-login" id="loginBtn">İsimle Giriş Yap</a>
+      </div>
+
+        <div class="language-selector">
+            <button onclick="setLanguage('tr')">🇹🇷</button>
+            <button onclick="setLanguage('en')">🇺🇸</button>
+            <button onclick="setLanguage('de')">🇩🇪</button>
+        </div>
+
+        <div id="leaderboard-container" class="glass-table">
+            <h3 id="leader-title">🏆 Dünya Sıralaması (Top 10)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 20%;" id="th-rank">Sıra</th>
+                        <th style="width: 50%;" id="th-player">Oyuncu</th>
+                        <th style="text-align: right; width: 30%;" id="th-score">Puan</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-body">
+                    <tr>
+                        <td colspan="3" style="text-align:center; padding:20px;">Skorlar Yükleniyor...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div style="text-align: center; margin: 25px 0;">
+            <button id="main-wa-share" style="background: linear-gradient(135deg, #25D366, #128C7E); color: white; border: none; padding: 14px 28px; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 16px; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); transition: transform 0.2s;">
+                <span style="font-size: 22px;">📱</span> <span id="wa-share-text">Arkadaşlarına Meydan Oku!</span>
+            </button>
+        </div>
+
+        <section id="hakkinda" style="padding: 20px; color: white; margin-top: 30px;">
+            <h2 id="h-about-title">Element Avcısı Hakkında</h2>
+            <p id="h-about-text">Bu oyun, kimya öğrenen öğrencilerin element sembollerini eğlenceli bir şekilde ezberlemesi için tasarlanmıştır...</p>
+        </section>
+
+        <section id="nasil-oynanir" style="padding: 30px; background: rgba(255,255,255,0.05); border-radius: 15px; margin: 20px 0; color: white;">
+            <h2 style="color: #e67e22; text-align: center;" id="h-how-title">🎮 Nasıl Oynanır?</h2>
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                <p id="how-p1"><strong>3 Can Hakkı:</strong> Toplamda 3 hata yapma hakkın var.</p>
+                <p id="how-p2"><strong>Puanlama:</strong> Her doğru eşleşme seni dünya sıralamasına taşır.</p>
+                <p id="how-p3"><strong>Oyun Sonu:</strong> Canlar bittiğinde skorun kaydedilir.</p>
+                <p id="how-p4"><strong>Seçenekler:</strong> Ayarları üst panelden yapabilirsiniz.</p>
+            </div>
+        </section>
+
+        <footer style="margin-top: 50px; padding: 10px; text-align: center; font-size: 0.8rem; opacity: 0.8; color: white;">
+            <div style="margin-bottom: 10px; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 20px;">
+                <a href="about.html" id="f-about" style="color: white; text-decoration: none; margin-right: 15px;">Hakkımızda</a>
+                <a href="terms.html" id="f-terms" style="color: white; text-decoration: none; margin-right: 15px;">Kullanım Koşulları</a>
+                <a href="privacy.html" id="f-privacy" style="color: white; text-decoration: none;">Gizlilik Politikası</a>
+                <a href="contact.html" id="f-contact" style="color: white; text-decoration: none; margin-left: 15px;">Bize Ulaşın</a>
+            </div>
+            <p id="f-copy">© 2026 Element Avcısı Pro</p>
+        </footer>
+    </div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+  import { getDatabase, ref, query, orderByChild, limitToLast, onValue } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDl4aJYLl4OHqqX2u0UuC34dUbpcyQdgMY",
+    authDomain: "elementsembol-3c430.firebaseapp.com",
+    projectId: "elementsembol-3c430",
+    databaseURL: "https://elementsembol-3c430-default-rtdb.firebaseio.com", 
+    storageBucket: "elementsembol-3c430.firebasestorage.app",
+    messagingSenderId: "925424889350",
+    appId: "1:925424889350:web:b7c895898c0436631b1d87"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+
+  // WhatsApp Paylaşım Fonksiyonu (Global)
+  window.whatsappPaylas = function() {
+    const lang = localStorage.getItem("seciliDil") || "tr";
+    const messages = {
+        tr: "Element Avcısı Pro'da rekorları altüst ediyorum! 🧪 Sen kaç puan yapabilirsin? Hemen dene: https://elementsembol.vercel.app",
+        en: "I'm breaking records in Element Hunter Pro! 🧪 Can you beat my score? Try now: https://elementsembol.vercel.app",
+        de: "Ich breche Rekorde in Element Jäger Pro! 🧪 Kannst du meine Punktzahl schlagen? Jetzt probieren: https://elementsembol.vercel.app"
+    };
+    const text = messages[lang] || messages.tr;
+    const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+    window.open(waUrl, '_blank');
+  };
+
+window.setLanguage = function(lang) {
+    localStorage.setItem("seciliDil", lang);
+    const dictionary = {
+        tr: { hard: "ZOR MOD: Tek Renk + 2X PUAN! ⚡", title: "Element Avcısı Pro", desc: "Kimya dünyasını oyunla keşfet!", start: "Oyunu Başlat", login: "İsimle Giriş Yap", guest: "Misafir", welcome: "Hoş Geldin, ", leader: "🏆 Dünya Sıralaması", rank: "Sıra", player: "Oyuncu", score: "Puan", aboutT: "Element Avcısı Hakkında", aboutP: "Bu oyun, kimya öğrenen öğrencilerin element sembollerini eğlenceli bir şekilde ezberlemesi için tasarlanmıştır...", howT: "🎮 Nasıl Oynanır?", h1: "3 Can Hakkı: 3 hata yapma hakkın var.", h2: "Puanlama: Her doğru eşleşme puan kazandırır.", h3: "Oyun Sonu: Skorun dünya sıralamasına kaydedilir.", h4: "Seçenekler: Üst panelden ayarları yapabilirsiniz.", f1: "Hakkımızda", f2: "Gizlilik Politikası", f3: "Bize Ulaşın", f4: "Kullanım Koşulları", mainDesc: "Periyodik tablo elementlerini eğlenerek öğrenin. En yüksek puanı toplayın ve dünya sıralamasına girin!", copy: "© 2026 Element Avcısı Pro",loading: "Skorlar Yükleniyor...", waText: "Arkadaşlarına Meydan Oku!"  },
+        en: { hard: "HARD MODE: Single Color + 2X SCORE! ⚡", title: "Element Hunter Pro", desc: "Discover chemistry through play!", start: "Start Game", login: "Login with Name", guest: "Guest", welcome: "Welcome, ", leader: "🏆 Global Ranking", rank: "Rank", player: "Player", score: "Score", aboutT: "About Element Hunter", aboutP: "This game is designed for students to learn symbols in a fun way...", howT: "🎮 How to Play?", h1: "3 Lives: You have 3 attempts allowed.", h2: "Scoring: Each match improves your rank.", h3: "Game Over: Score is auto-saved to leaderboard.", h4: "Options: Adjust settings via the top panel.", f1: "About Us", f2: "Privacy Policy", f3: "Contact Us", f4: "Terms of Use", mainDesc: "Learn periodic table elements with fun. Get the highest score and join the global ranking!", copy: "© 2026 Element Hunter Pro", loading: "Loading Scores...", waText: "Challenge Your Friends!" },
+        de: { hard: "HARD-MODUS: Einzelfarbe + 2X PUNKTE! ⚡", title: "Element Jäger Pro", desc: "Chemie spielerisch entdecken!", start: "Spiel Starten", login: "Einloggen", guest: "Gast", welcome: "Willkommen, ", leader: "🏆 Weltrangliste", rank: "Rang", player: "Spieler", score: "Punkt", aboutT: "Über Element Jäger", aboutP: "Dieses Spiel hilft Schülern, Symbole spielerisch zu lernen...", howT: "🎮 Wie spielt man?", h1: "3 Leben: Du hast 3 Versuche.", h2: "Punkte: Jedes Match zählt.", h3: "Spielende: Score wird in die Liste eingetragen.", h4: "Optionen: Einstellungen oben anpassen.", f1: "Über uns", f2: "Datenschutz", f3: "Kontakt", f4: "Nutzungsbedingungen", mainDesc: "Lernen Sie die Elemente des Periodensystems mit Spaß. Holen Sie sich die höchste Punktzahl!", copy: "© 2026 Element Jäger Pro", loading: "Spielstände werden geladen...", waText: "Fordere deine Freunde heraus!" }
+    };
+
+    const s = dictionary[lang];
+    const savedName = localStorage.getItem("oyuncuAdi");
+
+    if(document.getElementById('hard-mode-text')) document.getElementById('hard-mode-text').innerText = s.hard;
+    if(document.getElementById('main-title')) document.getElementById('main-title').innerText = s.title;
+    if(document.getElementById('main-desc')) document.getElementById('main-desc').innerText = s.desc;
+    if(document.getElementById('startBtn')) document.getElementById('startBtn').innerText = s.start;
+    if(document.getElementById('leader-title')) document.getElementById('leader-title').innerText = s.leader;
+    if(document.getElementById('th-rank')) document.getElementById('th-rank').innerText = s.rank;
+    if(document.getElementById('th-player')) document.getElementById('th-player').innerText = s.player;
+    if(document.getElementById('th-score')) document.getElementById('th-score').innerText = s.score;
+    if(document.getElementById('h-about-title')) document.getElementById('h-about-title').innerText = s.aboutT;
+    if(document.getElementById('h-about-text')) document.getElementById('h-about-text').innerText = s.aboutP;
+    if(document.getElementById('h-how-title')) document.getElementById('h-how-title').innerText = s.howT;
+    if(document.getElementById('wa-share-text')) document.getElementById('wa-share-text').innerText = s.waText;
+
+    const loginBtn = document.getElementById('loginBtn');
+    if (loginBtn) {
+        if (savedName) {
+            loginBtn.innerText = s.welcome + savedName;
+            loginBtn.style.background = "#27ae60";
+        } else {
+            loginBtn.innerText = s.login;
+            loginBtn.style.background = ""; 
+        }
+    }
+
+    const updateP = (id, text) => {
+        const el = document.getElementById(id);
+        if(el) {
+            const parts = text.split(':');
+            el.innerHTML = `<strong>${parts[0]}:</strong>${parts[1] || ''}`;
+        }
+    };
+    updateP('how-p1', s.h1); updateP('how-p2', s.h2); updateP('how-p3', s.h3); updateP('how-p4', s.h4);
+
+    if(document.getElementById('f-about')) document.getElementById('f-about').innerText = s.f1;
+    if(document.getElementById('f-privacy')) document.getElementById('f-privacy').innerText = s.f2;
+    if(document.getElementById('f-contact')) document.getElementById('f-contact').innerText = s.f3;
+    if(document.getElementById('f-copy')) document.getElementById('f-copy').innerText = s.copy;
+    if(document.getElementById('f-terms')) document.getElementById('f-terms').innerText = s.f4;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) { metaDesc.setAttribute("content", s.mainDesc); }
+    if (typeof skorlariGetir === 'function') {
+        skorlariGetir(); 
+    }
+};
+  function skorlariGetir() {
+    const currentLang = localStorage.getItem("seciliDil") || "tr"; 
+    const loadingTexts = { 
+        tr: "Skorlar Yükleniyor...", 
+        en: "Loading Scores...", 
+        de: "Spielstände werden geladen..." 
+    };
+       const tbody = document.getElementById('leaderboard-body');
+        if(!tbody) return;
+       tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:20px;">${loadingTexts[currentLang]}</td></tr>`;
+       
+    const skorRef = ref(database, 'skorlar');
+    const enIyilerSorgu = query(skorRef, orderByChild('puan'), limitToLast(50));
+    onValue(enIyilerSorgu, (snapshot) => {
+      tbody.innerHTML = "";
+        let tumSkorlar = [];
+        snapshot.forEach(c => { if(c.val().puan) tumSkorlar.push(c.val()); });
+        tumSkorlar.sort((a, b) => b.puan - a.puan);
+        let finalSkorlar = [];
+        let gorulenIsimler = new Set();
+        for (let skor of tumSkorlar) {
+            let isimKey = (skor.isim || "Guest").toString().trim().toLowerCase();
+            if (!gorulenIsimler.has(isimKey)) { finalSkorlar.push(skor); gorulenIsimler.add(isimKey); }
+            if (finalSkorlar.length === 10) break;
+        }
+          if (finalSkorlar.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:20px;">-</td></tr>`;
+            return;
+        }
+        
+        finalSkorlar.forEach((skor, index) => {
+            const tr = document.createElement('tr');
+            let emoji = (index === 0) ? "🥇" : (index === 1) ? "🥈" : (index === 2) ? "🥉" : index + 1;
+            tr.innerHTML = `<td style="padding:10px; text-align:center;">${emoji}</td><td>${skor.isim}</td><td style="text-align:right; font-weight:bold; color:#e67e22;">${skor.puan}</td>`;
+            tbody.appendChild(tr);
+        });
+    }, { onlyOnce: false });
+  }
+
+window.addEventListener('DOMContentLoaded', () => {
+    const currentLang = localStorage.getItem("seciliDil") || "tr";
+    const hardModeToggle = document.getElementById('hard-mode-toggle');
+    const waBtn = document.getElementById('main-wa-share');
+    
+    if (waBtn) {
+        waBtn.onclick = window.whatsappPaylas;
+    }
+
+    if (hardModeToggle) {
+        hardModeToggle.checked = localStorage.getItem('zorModSecimi') === 'true';
+        hardModeToggle.onchange = function() {
+            localStorage.setItem('zorModSecimi', this.checked);
+        };
+    }
+
+    window.setLanguage(currentLang);
+    skorlariGetir();
+});
+
+document.getElementById('loginBtn').onclick = function(e) {
+    e.preventDefault();
+    const lang = localStorage.getItem("seciliDil") || "tr";
+    const prompts = { tr: "İsminizi girin:", en: "Enter your name:", de: "Name eingeben:" };
+    let userName = prompt(prompts[lang]);
+    
+    if (userName && userName.trim() !== "") {
+        localStorage.setItem("oyuncuAdi", userName.trim());
+        window.setLanguage(lang);
+    }
+};
+</script>
+
+</body>
+</html>

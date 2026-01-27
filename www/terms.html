@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Terms of Use for Element Hunter Pro. Rules and guidelines for using our educational game.">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9457945949630736" crossorigin="anonymous">
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Kullanım Koşulları - Element Avcısı Pro
+    </title>
+    <link rel="stylesheet" href="style.css?v=1">
+    <style>
+        .about-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+            background: radial-gradient(circle, #2c3e50 0%, #000000 100%) no-repeat center center fixed;
+            color: white;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .about-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 100%;
+            max-width: 700px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: left;
+        }
+
+        h1, h2 {
+            color: #e67e22;
+            text-align: center;
+        }
+
+        p {
+            line-height: 1.8;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .back-link {
+          display: block;
+          text-align: center;
+          margin-top: 30px;
+          color: white;
+          text-decoration: none;
+          opacity: 0.6;
+          transition: all 0.3s ease; 
+        }
+
+        .back-link:hover {
+          opacity: 1;
+          text-decoration: none; 
+          transform: translateY(-3px);
+          text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); 
+        }
+        strong {
+          color: #3498db;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="about-container">
+        <div class="about-card">
+            <h1 id="a-header">Kullanım Koşulları</h1>
+            <div id="a-content">
+                </div>
+            <a href="index.html" class="back-link" id="a-back">← Ana Sayfaya Dön</a>
+        </div>
+    </div>
+    <script>
+      const texts = {
+        tr: {
+        header: "Kullanım Koşulları",
+        desc: "Element Avcısı Pro Kullanım Koşulları. Oyun kuralları ve yasal sorumluluklar.",
+        back: "← Ana Sayfaya Dön",
+        content: `
+          <p><strong>Element Avcısı Pro</strong> platformuna hoş geldiniz. Bu siteyi kullanarak aşağıdaki şartları kabul etmiş sayılırsınız:</p>
+          <h3>1. Kullanım Amacı</h3>
+          <p>Bu oyun eğitim amaçlıdır. Skor tablosunu manipüle etmek veya site yapısına zarar verecek girişimlerde bulunmak yasaktır.</p>
+          <h3>2. Fikri Mülkiyet</h3>
+          <p>Oyun içerisindeki tüm kodlar, tasarım öğeleri ve konsept Element Avcısı Pro'ya aittir; izinsiz kopyalanamaz.</p>
+          <h3>3. Sorumluluk Reddi</h3>
+          <p>Bilgilerin doğruluğu için azami gayret gösterilse de, eğitim sürecindeki hatalardan platform sorumlu tutulamaz.</p>`
+        },
+        en: {
+        header: "Terms of Use",
+        desc: "Terms of Use for Element Hunter Pro. Game rules and legal responsibilities.",
+        back: "← Back to Home",
+        content: `
+          <p>Welcome to <strong>Element Hunter Pro</strong>. By using this site, you agree to the following terms:</p>
+          <h3>1. Purpose of Use</h3>
+          <p>This game is for educational purposes. Manipulating the leaderboard or attempting to damage the site structure is prohibited.</p>
+          <h3>2. Intellectual Property</h3>
+          <p>All codes, design elements, and concepts within the game belong to Element Hunter Pro; they cannot be copied without permission.</p>
+          <h3>3. Disclaimer</h3>
+          <p>While every effort is made to ensure information accuracy, the platform cannot be held responsible for educational errors.</p>`
+        },
+        de: {
+        header: "Nutzungsbedingungen",
+        desc: "Nutzungsbedingungen für Element Jäger Pro. Spielregeln und rechtliche Verantwortung.",
+        back: "← Zurück zur Startseite",
+        content: `
+         <p>Willkommen bei <strong>Element Jäger Pro</strong>. Durch die Nutzung dieser Website stimmen Sie den folgenden Bedingungen zu:</p>
+          <h3>1. Verwendungszweck</h3>
+          <p>Dieses Spiel dient zu Bildungszwecken. Die Manipulation der Rangliste oder der Versuch, die Website-Struktur zu beschädigen, ist untersagt.</p>
+          <h3>2. Geistiges Eigentum</h3>
+          <p>Alle Codes, Designelemente und Konzepte innerhalb des Spiels gehören Element Jäger Pro; sie dürfen nicht ohne Genehmigung kopiert werden.</p>
+          <h3>3. Haftungsausschluss</h3>
+          <p>Obwohl maximale Anstrengungen unternommen werden, um die Richtigkeit der Informationen sicherzustellen, kann die Plattform nicht für Fehler im Bildungsprozess verantwortlich gemacht werden.</p>`
+        }
+      };
+      document.addEventListener('DOMContentLoaded', () => {    
+        const currentLang = localStorage.getItem("seciliDil") || "tr";
+        const s = texts[currentLang];
+      document.getElementById('a-header').innerText = s.header;
+      document.getElementById('a-back').innerText = s.back;
+      document.getElementById('a-content').innerHTML = s.content;
+      document.title = s.header + " - Element Avcısı Pro";
+        const metaDesc = document.querySelector('meta[name="description"]');
+        if (metaDesc) { 
+        metaDesc.setAttribute("content", s.desc); 
+        }
+      });
+    </script>
+</body>
+</html>

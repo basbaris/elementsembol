@@ -10,11 +10,15 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+      - name: Force Capacitor Sync
+        run: |
+          npm install
+          npx cap sync android
       - name: Build with Gradle
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug -x lint # Hataları görmezden gel ve paketle
+          ./gradlew assembleDebug
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:

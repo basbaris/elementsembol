@@ -1,13 +1,9 @@
-// Bu dosya GitHub Actions hatasını çözmek için manuel olarak düzenlendi.
 android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
 }
-
-// Hata veren satırı aşağıda devre dışı bıraktık
-// apply from: "../../node_modules/@capacitor/android/capacitor-cordova-android-plugins/cordova.variables.gradle"
 
 dependencies {
 }

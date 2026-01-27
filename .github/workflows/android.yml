@@ -4,19 +4,27 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4 # v3'ten v4'e güncellendi
+
       - name: set up JDK 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4 # v3'ten v4'e güncellendi
         with:
           java-version: '17'
           distribution: 'temurin'
+
       - name: Build with Gradle
         run: |
-          cd android
-          chmod +x gradlew
-          ./gradlew assembleDebug
+          if [ -d "android" ]; then
+            cd android
+            chmod +x gradlew
+            ./gradlew assembleDebug
+          else
+            echo "HATA: android klasörü bulunamadı!"
+            exit 1
+          fi
+          
       - name: Upload APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4 # v3'ten v4'e güncellendi (Kritik hata buradaydı)
         with:
           name: Element-Avcisi-Uygulamasi
           path: android/app/build/outputs/apk/debug/app-debug.apk

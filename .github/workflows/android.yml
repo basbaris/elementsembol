@@ -17,12 +17,12 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Clean and Sync Capacitor
+      - name: Clean and Sync
         run: |
           npm install
           npx cap sync android
 
-      - name: Build with Gradle (Clean Build)
+      - name: Build with Gradle
         run: |
           cd android
           chmod +x gradlew

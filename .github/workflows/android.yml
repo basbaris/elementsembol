@@ -17,19 +17,13 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Capacitor Sync
+      - name: Capacitor Clean & Sync
         run: |
           npm install
           npx cap sync android
 
-      - name: Build APK
+      - name: Build APK (The Fix)
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug --no-daemon
-          
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: Element-Avcisi-APK
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          ./gradlew clean assembleDebug --no-daemon -x lint

@@ -11,30 +11,27 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+          cache: 'gradle'
 
       - name: Install Node.js 22
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
-      - name: Sync Project
+      - name: Install Dependencies
         run: |
           npm install
           npx cap sync android
 
-      - name: Accept Android Licenses
-        run: yes | sdkmanager --licenses || true
-
-      - name: Final Build
+      - name: Accept Licenses & Build
         run: |
+          yes | sdkmanager --licenses || true
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug --no-daemon -Dorg.gradle.welcome=never
+          ./gradlew assembleDebug --no-daemon -Dorg.gradle.jvmargs=-Xmx2048m -Dorg.gradle.welcome=never
           
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Element-Avcisi-APK
-          path: |
-            android/app/build/outputs/apk/debug/*.apk
-            android/app/build/outputs/apk/release/*.apk
+          path: android/app/build/outputs/apk/debug/*.apk

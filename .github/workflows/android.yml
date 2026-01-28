@@ -17,16 +17,16 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Reset & Sync
+      - name: Final Sync
         run: |
           npm install
           npx cap sync android
 
-      - name: Radical Build
+      - name: Build and Package APK
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug --no-daemon --stacktrace --scan -Dorg.gradle.debug=false
+          ./gradlew assembleDebug --no-daemon -Dorg.gradle.welcome=never
           
       - name: Upload APK
         uses: actions/upload-artifact@v4

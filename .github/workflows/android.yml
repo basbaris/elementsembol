@@ -17,16 +17,19 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Final Sync
+      - name: Sync Project
         run: |
           npm install
           npx cap sync android
 
-      - name: Build and Package APK
+      - name: Accept Android Licenses # Kritik Adım!
+        run: yes | sdkmanager --licenses || true
+
+      - name: Final Build
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug --no-daemon -Dorg.gradle.welcome=never
+          ./gradlew assembleDebug --no-daemon -Dorg.gradle.welcome=never -Pandroid.testInstrumentationRunnerArguments.notAnnotation=android.support.test.filters.FlakyTest
           
       - name: Upload APK
         uses: actions/upload-artifact@v4

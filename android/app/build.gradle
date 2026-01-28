@@ -32,8 +32,11 @@ dependencies {
     implementation "androidx.core:core:1.12.0"
     implementation "androidx.activity:activity:1.8.0"
     implementation "androidx.webkit:webkit:1.11.0"
+    
+    // Capacitor kütüphanelerini doğrudan çağırıyoruz
     implementation project(':capacitor-android')
     implementation project(':capacitor-cordova-android-plugins')
 }
 
+// Bu satır çok kritik, Capacitor ayarlarını buraya bağlar
 apply from: 'capacitor.build.gradle'

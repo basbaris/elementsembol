@@ -22,17 +22,19 @@ jobs:
           npm install
           npx cap sync android
 
-      - name: Accept Android Licenses # Kritik Adım!
+      - name: Accept Android Licenses
         run: yes | sdkmanager --licenses || true
 
       - name: Final Build
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug --no-daemon -Dorg.gradle.welcome=never -Pandroid.testInstrumentationRunnerArguments.notAnnotation=android.support.test.filters.FlakyTest
+          ./gradlew assembleDebug --no-daemon -Dorg.gradle.welcome=never
           
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Element-Avcisi-APK
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: |
+            android/app/build/outputs/apk/debug/*.apk
+            android/app/build/outputs/apk/release/*.apk

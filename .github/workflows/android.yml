@@ -6,29 +6,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Node.js 22
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: 'npm' # Kütüphaneleri daha güvenli saklar
-
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: 'gradle' # Gradle kalıntılarını temizler
 
-      - name: Hard Reset and Sync
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Hard Reset
         run: |
+          rm -rf node_modules package-lock.json
           npm install
           npx cap sync android
 
-      - name: Build with Gradle
+      - name: Final Build
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew clean assembleDebug --no-daemon --stacktrace
+          ./gradlew clean assembleDebug --no-daemon
           
       - name: Upload APK
         uses: actions/upload-artifact@v4

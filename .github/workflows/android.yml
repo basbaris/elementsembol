@@ -17,18 +17,16 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Reconstruct Android Project
+      - name: Reset & Sync
         run: |
           npm install
           npx cap sync android
-          npx cap add android || true # Eğer varsa hata verme, yoksa ekle
-          npx cap copy android
 
-      - name: Ultimate Build
+      - name: Radical Build
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew clean assembleDebug --no-daemon -Dorg.gradle.jvmargs=-Xmx2048m
+          ./gradlew assembleDebug --no-daemon --stacktrace --scan -Dorg.gradle.debug=false
           
       - name: Upload APK
         uses: actions/upload-artifact@v4

@@ -1,4 +1,4 @@
-name: Build APK
+name: Build APK (Radical Reset)
 on: [push]
 jobs:
   build:
@@ -11,22 +11,26 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: 'gradle'
 
       - name: Install Node.js 22
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
-      - name: Install & Sync
+      - name: Force Reconstruct Project
         run: |
           npm install
+          rm -rf android # RADİKAL HAMLE: Eski Android klasörünü tamamen sil!
+          npx cap add android
           npx cap sync android
+          npx cap copy android
 
-      - name: Build Android APK
+      - name: Grant Permissions
+        run: chmod +x android/gradlew
+
+      - name: Hard Build
         run: |
           cd android
-          chmod +x gradlew
           ./gradlew assembleDebug --no-daemon
           
       - name: Upload APK

@@ -1,4 +1,4 @@
-name: Build APK (Java 21 Boost)
+name: Build APK (Java 21 Boost + Icon)
 on: [push]
 jobs:
   build:
@@ -6,7 +6,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: set up JDK 21 # Burayı Java 21 yaptık!
+      - name: set up JDK 21
         uses: actions/setup-java@v4
         with:
           java-version: '21'
@@ -17,11 +17,22 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Reconstruct Project
+      - name: Install Dependencies
         run: |
           npm install
+          npm install -g @capacitor/assets
+
+      - name: Reconstruct Project & Generate Icons
+        run: |
+          # Android klasörünü temizleyip sıfırdan kuruyoruz
           rm -rf android
           npx cap add android
+          
+          # Eğer ana dizinde icon.png varsa ikonları Android klasörüne basıyoruz
+          if [ -f icon.png ]; then
+            npx capacitor-assets generate --android
+          fi
+          
           npx cap sync android
 
       - name: Final Build

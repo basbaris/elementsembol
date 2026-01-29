@@ -1,4 +1,4 @@
-name: Build APK (Java 21 Boost + Icon)
+name: Build APK (Final Fix)
 on: [push]
 jobs:
   build:
@@ -22,17 +22,19 @@ jobs:
           npm install
           npm install -g @capacitor/assets
 
-      - name: Reconstruct Project & Generate Icons
+      - name: Reconstruct Project & Force Icon
         run: |
-          # Android klasörünü temizleyip sıfırdan kuruyoruz
+          # Eski klasörü tamamen siliyoruz
           rm -rf android
+          # Android platformunu sıfırdan ekliyoruz
           npx cap add android
           
-          # Eğer ana dizinde icon.png varsa ikonları Android klasörüne basıyoruz
+          # İkon dosyasını zorla (force) Android klasörüne enjekte ediyoruz
           if [ -f icon.png ]; then
-          npx capacitor-assets generate --android --icon icon.png
+            npx capacitor-assets generate --android
           fi
           
+          # Değişiklikleri Android projesine aktarıyoruz
           npx cap sync android
 
       - name: Final Build

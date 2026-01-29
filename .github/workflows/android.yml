@@ -30,7 +30,7 @@ jobs:
           
           # Eğer ana dizinde icon.png varsa ikonları Android klasörüne basıyoruz
           if [ -f icon.png ]; then
-            npx capacitor-assets generate --android
+          npx capacitor-assets generate --android --icon icon.png
           fi
           
           npx cap sync android

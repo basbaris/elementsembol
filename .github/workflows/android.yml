@@ -1,4 +1,4 @@
-name: Build APK (Radical Reset)
+name: Build APK (Java 21 Boost)
 on: [push]
 jobs:
   build:
@@ -6,10 +6,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: set up JDK 17
+      - name: set up JDK 21 # Burayı Java 21 yaptık!
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
 
       - name: Install Node.js 22
@@ -17,20 +17,17 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Force Reconstruct Project
+      - name: Reconstruct Project
         run: |
           npm install
-          rm -rf android # RADİKAL HAMLE: Eski Android klasörünü tamamen sil!
+          rm -rf android
           npx cap add android
           npx cap sync android
-          npx cap copy android
 
-      - name: Grant Permissions
-        run: chmod +x android/gradlew
-
-      - name: Hard Build
+      - name: Final Build
         run: |
           cd android
+          chmod +x gradlew
           ./gradlew assembleDebug --no-daemon
           
       - name: Upload APK

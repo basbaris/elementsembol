@@ -11,23 +11,23 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+          cache: 'gradle'
 
       - name: Install Node.js 22
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
-      - name: Deep Clean & Install
+      - name: Install & Sync
         run: |
-          npm ci # Sadece package-lock ne diyorsa onu kurar, tertemizdir
+          npm install
           npx cap sync android
 
-      - name: Accept Licenses & Ultimate Build
+      - name: Build Android APK
         run: |
-          yes | sdkmanager --licenses || true
           cd android
           chmod +x gradlew
-          ./gradlew clean assembleDebug --no-daemon -Dorg.gradle.welcome=never
+          ./gradlew assembleDebug --no-daemon
           
       - name: Upload APK
         uses: actions/upload-artifact@v4

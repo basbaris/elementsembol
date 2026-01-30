@@ -1,16 +1,7 @@
 {
-  "name": "element-avci-pro",
-  "version": "1.0.0",
-  "description": "Element Avcısı Pro Splash Screen Update",
   "dependencies": {
     "@capacitor/android": "^8.0.2",
     "@capacitor/cli": "^8.0.2",
     "@capacitor/core": "^8.0.2"
-  },
-  "devDependencies": {
-    "@capacitor/assets": "^3.0.0"
-  },
-  "scripts": {
-    "icons": "capacitor-assets generate --android"
   }
 }

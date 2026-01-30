@@ -1,4 +1,4 @@
-name: Build APK (Icon Force Final)
+name: Build APK (Brute Force Icon Fix)
 on: [push]
 jobs:
   build:
@@ -22,18 +22,23 @@ jobs:
           npm install
           npm install -g @capacitor/assets
 
-      - name: Reconstruct and Generate
+      - name: Reconstruct & Force Inject
         run: |
-          # Android klasörünü temizle
+          # 1. Android klasörünü sıfırla
           rm -rf android
           npx cap add android
           
-          # İkonu üret (Klasör yoksa hata vermemesi için kontrol ekledik)
+          # 2. İkonları üret
           if [ -f icon.png ]; then
             npx capacitor-assets generate --android
+            
+            # 3. ZORLA KOPYALAMA: Üretilen ikonu ana ikon olarak her yere yapıştır
+            # Bu komut sistemin "eskiyi kullanma" ihtimalini ortadan kaldırır
+            cp icon.png android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+            cp icon.png android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png
+            cp icon.png android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png
           fi
           
-          # Android projesini senkronize et
           npx cap sync android
 
       - name: Final Build

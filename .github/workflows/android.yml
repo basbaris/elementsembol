@@ -1,4 +1,4 @@
-name: Build APK (Brute Force Icon Fix)
+name: Build APK (Full Icon Layer Fix)
 on: [push]
 jobs:
   build:
@@ -22,21 +22,25 @@ jobs:
           npm install
           npm install -g @capacitor/assets
 
-      - name: Reconstruct & Force Inject
+      - name: Reconstruct & Layer Wipe
         run: |
-          # 1. Android klasörünü sıfırla
           rm -rf android
           npx cap add android
           
-          # 2. İkonları üret
           if [ -f icon.png ]; then
+            # 1. Standart ikonları üret
             npx capacitor-assets generate --android
             
-            # 3. ZORLA KOPYALAMA: Üretilen ikonu ana ikon olarak her yere yapıştır
-            # Bu komut sistemin "eskiyi kullanma" ihtimalini ortadan kaldırır
-            cp icon.png android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
-            cp icon.png android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png
-            cp icon.png android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png
+            # 2. Android'in o "mavi çizgili" arka planını tamamen siliyoruz
+            find android/app/src/main/res -name "ic_launcher_background.xml" -delete
+            find android/app/src/main/res -name "ic_launcher_background.png" -delete
+            
+            # 3. Senin ikonunu her türlü formatta (ön plan, arka plan, yuvarlak) zorla yapıştırıyoruz
+            for dir in android/app/src/main/res/mipmap-*; do
+              cp icon.png "$dir/ic_launcher.png"
+              cp icon.png "$dir/ic_launcher_round.png"
+              cp icon.png "$dir/ic_launcher_foreground.png"
+            done
           fi
           
           npx cap sync android

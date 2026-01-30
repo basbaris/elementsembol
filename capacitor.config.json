@@ -1,7 +1,7 @@
 {
   "appId": "com.element.avci.pro",
   "appName": "Element Avcısı Pro",
-  "webDir": "dist",
+  "webDir": "www",
   "bundledWebRuntime": false,
   "plugins": {
     "SplashScreen": {

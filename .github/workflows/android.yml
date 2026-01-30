@@ -1,4 +1,4 @@
-name: Build APK (Icon Path Fix)
+name: Build APK (Assets Folder Fix)
 on: [push]
 jobs:
   build:
@@ -22,16 +22,18 @@ jobs:
           npm install
           npm install -g @capacitor/assets
 
-      - name: Prepare Android & Fix Icons
+      - name: Create Assets & Generate Icons
         run: |
-          # Android klasörünü sıfırla
+          # 1. Android klasörünü sıfırla
           rm -rf android
           npx cap add android
           
-          # İkon üretme aracına yolu (nokta işareti ile) doğrudan gösteriyoruz
-          if [ -f icon.png ]; then
-            npx capacitor-assets generate --android --asset-path .
-          fi
+          # 2. Sistemin aradığı 'assets' klasörünü oluştur ve ikonu içine kopyala
+          mkdir -p assets
+          cp icon.png assets/icon.png
+          
+          # 3. Aracı çalıştır (Klasör artık var olduğu için otomatik bulacak)
+          npx capacitor-assets generate --android
           
           npx cap sync android
 

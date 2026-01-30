@@ -1,4 +1,4 @@
-name: Build APK (Force Icon Clear)
+name: Build APK (Icon Force Final)
 on: [push]
 jobs:
   build:
@@ -22,20 +22,18 @@ jobs:
           npm install
           npm install -g @capacitor/assets
 
-      - name: Hard Reset Android & Icons
+      - name: Reconstruct and Generate
         run: |
-          # 1. Android klasörünü tamamen sil
+          # Android klasörünü temizle
           rm -rf android
           npx cap add android
           
-          # 2. Eğer icon.png varsa, Android içindeki varsayılan ikonları temizle ve yenisini bas
+          # İkonu üret (Klasör yoksa hata vermemesi için kontrol ekledik)
           if [ -f icon.png ]; then
-            # Eski ikon klasörlerini manuel temizlik (garanti olsun diye)
-            rm -rf android/app/src/main/res/mipmap-*
-            # Yeni ikonu oluştur
             npx capacitor-assets generate --android
           fi
           
+          # Android projesini senkronize et
           npx cap sync android
 
       - name: Final Build

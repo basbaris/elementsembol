@@ -1,4 +1,4 @@
-name: Build APK (Final Clean Fix)
+name: Build APK (Icon Path Fix)
 on: [push]
 jobs:
   build:
@@ -24,16 +24,15 @@ jobs:
 
       - name: Prepare Android & Fix Icons
         run: |
-          # 1. Android klasörünü sıfırdan kur
+          # Android klasörünü sıfırla
           rm -rf android
           npx cap add android
           
-          # 2. Sadece ikonları üret (Çakışma olmaması için kopyalama yapmıyoruz)
+          # İkon üretme aracına yolu (nokta işareti ile) doğrudan gösteriyoruz
           if [ -f icon.png ]; then
-            npx capacitor-assets generate --android
+            npx capacitor-assets generate --android --asset-path .
           fi
           
-          # 3. Android senkronizasyonu
           npx cap sync android
 
       - name: Final Build

@@ -1,4 +1,4 @@
-name: Build APK (Final Fix)
+name: Build APK (Absolute Icon Fix)
 on: [push]
 jobs:
   build:
@@ -22,19 +22,21 @@ jobs:
           npm install
           npm install -g @capacitor/assets
 
-      - name: Reconstruct Project & Force Icon
+      - name: Reconstruct Project & Inject Icon
         run: |
-          # Eski klasörü tamamen siliyoruz
+          # Android klasörünü temizle
           rm -rf android
-          # Android platformunu sıfırdan ekliyoruz
           npx cap add android
           
-          # İkon dosyasını zorla (force) Android klasörüne enjekte ediyoruz
+          # İkonu zorla üret ve klasörlere dağıt
           if [ -f icon.png ]; then
-            npx capacitor-assets generate --android
+            # capacitor-assets aracını kullanarak ikonu Android dizinine zorla işle
+            npx capacitor-assets generate --android --icon icon.png
+          else
+            echo "HATA: icon.png dosyası kök dizinde bulunamadı!"
+            exit 1
           fi
           
-          # Değişiklikleri Android projesine aktarıyoruz
           npx cap sync android
 
       - name: Final Build

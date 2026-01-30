@@ -9,10 +9,7 @@
       "launchAutoHide": true,
       "backgroundColor": "#ffffff",
       "androidSplashResourceName": "splash",
-      "androidScaleType": "CENTER_CROP",
-      "showSpinner": false,
-      "splashFullScreen": true,
-      "splashImmersive": true
+      "androidScaleType": "CENTER_CROP"
     }
   }
 }

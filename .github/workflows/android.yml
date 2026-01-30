@@ -1,4 +1,4 @@
-name: Build APK (Icon Final Target)
+name: Build APK (Final Clean Fix)
 on: [push]
 jobs:
   build:
@@ -28,22 +28,12 @@ jobs:
           rm -rf android
           npx cap add android
           
-          # 2. İkonu üret
+          # 2. Sadece ikonları üret (Çakışma olmaması için kopyalama yapmıyoruz)
           if [ -f icon.png ]; then
             npx capacitor-assets generate --android
-            
-            # 3. Android'in o mavi kareli arka planını (ic_launcher_background) 
-            # senin ikonunla tamamen değiştiriyoruz. Hata vermemesi için kopyalıyoruz.
-            for dir in android/app/src/main/res/mipmap-*; do
-              cp icon.png "$dir/ic_launcher.png"
-              cp icon.png "$dir/ic_launcher_round.png"
-              cp icon.png "$dir/ic_launcher_foreground.png"
-            done
-            
-            # 4. Arka plan XML dosyalarını temizle (Mavi çizgilerin kaynağı burası)
-            find android/app/src/main/res/drawable* -name "ic_launcher_background.xml" -delete || true
           fi
           
+          # 3. Android senkronizasyonu
           npx cap sync android
 
       - name: Final Build

@@ -9,7 +9,9 @@
       "androidSplashResourceName": "splash",
       "androidScaleType": "CENTER_CROP",
       "backgroundColor": "#ffffff",
-      "useDialog": true
+      "useDialog": true,
+      "splashFullScreen": true,
+      "splashImmersive": true
     }
   }
 }

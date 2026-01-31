@@ -2,21 +2,15 @@
   "appId": "com.element.avci.pro",
   "appName": "Element Avcısı Pro",
   "webDir": "www",
-  "bundledWebRuntime": false,
   "plugins": {
     "SplashScreen": {
       "launchShowDuration": 3000,
       "launchAutoHide": true,
-      "backgroundColor": "#ffffff",
       "androidSplashResourceName": "splash",
       "androidScaleType": "CENTER_CROP",
-      "showSpinner": false,
-      "androidSpinnerStyle": "large",
-      "spinnerColor": "#999999",
       "splashFullScreen": true,
       "splashImmersive": true,
-      "layoutName": "launch_screen",
-      "useDialog": false
+      "backgroundColor": "#ffffff"
     }
   }
 }

@@ -5,12 +5,11 @@
   "plugins": {
     "SplashScreen": {
       "launchShowDuration": 3000,
-      "launchAutoHide": false,
+      "launchAutoHide": true,
       "androidSplashResourceName": "splash",
       "androidScaleType": "CENTER_CROP",
-      "showSpinner": false,
-      "splashFullScreen": true,
-      "splashImmersive": true
+      "backgroundColor": "#ffffff",
+      "useDialog": true
     }
   }
 }
